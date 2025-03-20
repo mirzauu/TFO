@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Employee Documents</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --primary-dark: #3a56d4;
+            --success: #2ec4b6;
+            --success-light: #e8f8f6;
+            --error: #e63946;
+            --error-light: #fdedee;
+            --text: #2b2d42;
+            --text-light: #8d99ae;
+            --background: #f8f9fa;
+            --card: #ffffff;
+            --border: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background-color: var(--background);
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4ecfb 100%);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem auto;
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.08), 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        h2 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+            font-size: 1.75rem;
+        }
+        
+        .employee-badge {
+            display: inline-block;
+            background-color: var(--primary-light);
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .alert {
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+        
+        .alert-success { 
+            background-color: var(--success-light); 
+            color: var(--success); 
+            border-left: 4px solid var(--success);
+        }
+        
+        .alert-error { 
+            background-color: var(--error-light); 
+            color: var(--error); 
+            border-left: 4px solid var(--error);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+        
+        .custom-file-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            background-color: #fafbfc;
+            transition: all 0.3s ease;
+            flex-direction: column;
+        }
+        
+        .custom-file-input:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .custom-file-input i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .custom-file-input p {
+            margin: 0;
+            color: var(--text);
+            font-weight: 500;
+        }
+        
+        .custom-file-input .file-hint {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+        
+        .file-selected {
+            display: none;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text);
+            background-color: var(--primary-light);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border: none;
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .form-group .helptext {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+        
+        .form-group ul.errorlist {
+            list-style: none;
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding-left: 0;
+        }
+        
+        .form-group ul.errorlist li {
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-group ul.errorlist li:before {
+            content: '\f071';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            margin-top: 1rem;
+            border-radius: 4px;
+            background-color: var(--border);
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 4px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Document Upload</h2>
+            <div class="employee-badge">{{ onboarding.employee_name }}</div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    
+                    {% if field.field.widget.input_type == 'file' %}
+                        <div class="file-input-wrapper">
+                            {{ field }}
+                            <div class="custom-file-input">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag & drop your files here</p>
+                                <span class="file-hint">or click to browse</span>
+                            </div>
+                        </div>
+                        <div class="file-selected"></div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    
+                    {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text }}</span>
+                    {% endif %}
+                    
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Documents
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Simple file input enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            
+            fileInputs.forEach(function(input) {
+                const wrapper = input.closest('.file-input-wrapper');
+                const customInput = wrapper.querySelector('.custom-file-input');
+                const fileSelected = wrapper.nextElementSibling;
+                
+                input.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        fileSelected.style.display = 'block';
+                        fileSelected.textContent = this.files[0].name;
+                        customInput.style.borderColor = 'var(--primary)';
+                    } else {
+                        fileSelected.style.display = 'none';
+                    }
+                });
+                
+                // Visual feedback for drag and drop
+                ['dragover', 'dragenter'].forEach(eventName => {
+                    customInput.addEventListener(eventName, function(e) {
+                        e.preventDefault();
+                        this.style.borderColor = 'var(--primary)';
+                        this.style.backgroundColor = 'var(--primary-light)';
+                    }, false);
+                });
+                
+                ['dragleave', 'dragend', 'drop'].forEach(eventName => {
+                    customInput.addEventListener(eventName, function(e) {
+                        e.preventDefault();
+                        if (!input.files.length) {
+                            this.style.borderColor = 'var(--border)';
+                            this.style.backgroundColor = '#fafbfc';
+                        }
+                    }, false);
+                });
+            });
+            
+            // Simple form submission with progress simulation
+            const form = document.getElementById('uploadForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const progressContainer = document.querySelector('.progress-container');
+            const progressBar = document.querySelector('.progress-bar');
+            
+            form.addEventListener('submit', function(e) {
+                const fileInputs = document.querySelectorAll('input[type="file"]');
+                let hasFile = false;
+                
+                fileInputs.forEach(function(input) {
+                    if (input.files.length > 0) hasFile = true;
+                });
+                
+                if (hasFile) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                    progressContainer.style.display = 'block';
+                    
+                    // Simulate progress
+                    let width = 0;
+                    const interval = setInterval(function() {
+                        if (width >= 90) {
+                            clearInterval(interval);
+                        } else {
+                            width += Math.random() * 10;
+                            progressBar.style.width = width + '%';
+                        }
+                    }, 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

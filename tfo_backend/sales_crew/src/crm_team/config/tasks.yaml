@@ -1,0 +1,40 @@
+follow_up_manager_task:
+  description: >
+    Develop an automated email follow-up system for clients. Ensure each email is personalized based on customer interactions and inquiries.
+  expected_output: >
+    A fully automated email system template with personalized example emails for three scenarios: new client, recurring client, and inquiry follow-up.
+    Topic: {topic}
+  agent: follow_up_manager
+
+feedback_analyst_task:
+  description: >
+    Examine customer feedback from multiple sources, identify patterns, and provide recommendations to enhance customer experience.
+  expected_output: >
+    A report summarizing key insights, identified patterns, and actionable recommendations based on customer feedback.
+    Topic: {topic}
+  agent: feedback_analyst
+
+customer_segmentation_task:
+  description: >
+    Categorize customers into high, medium, and low sales potential based on historical data and interactions. Create criteria for segment definitions.
+  expected_output: >
+    A categorized list of customers with criteria used for segmentation and an action plan for targeting high-potential customers.
+    Topic: {topic}
+  agent: customer_segmentation_expert
+
+cross_sell_strategist_task:
+  description: >
+    Develop cross-sell recommendations tailored to customer preferences and purchase history.
+  expected_output: >
+    A list of personalized cross-sell recommendations for ten sample customers, including reasoning behind each suggestion.
+    Topic: {topic}
+  agent: cross_sell_strategist
+
+survey_specialist_task:
+  description: >
+    Create a comprehensive survey template to gauge customer satisfaction. Ensure the survey encourages detailed feedback while being concise.
+  expected_output: >
+    A ready-to-use customer satisfaction survey template with clear instructions, along with a proposed deployment plan.
+    Topic: {topic}
+  agent: survey_specialist
+

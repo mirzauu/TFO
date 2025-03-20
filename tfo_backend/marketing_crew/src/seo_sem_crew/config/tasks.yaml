@@ -1,0 +1,193 @@
+      
+keyword_research_task:
+
+  description: >
+
+    Conducting keyword research to identify opportunities.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    List of targeted keywords with search volume and competition.
+
+  agent: keyword_researcher
+
+
+
+content_optimization_task:
+
+  description: >
+
+    Optimizing website content for search engines.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    - Improved web pages with optimized titles, headers, and body text.
+
+  agent: content_optimizer
+
+
+
+backlink_analysis_task:
+
+  description: >
+
+    Analyzing backlinks and suggesting improvements.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Report on current backlinks with recommendations for new opportunities.
+
+  agent: backlink_analyst
+
+
+
+analytics_monitoring_task:
+
+  description: >
+
+    Monitoring website performance using analytics tools.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Regular performance reports highlighting key metrics and insights.
+
+  agent: analytics_specialist
+
+
+
+seo_reporting_task:
+
+  description: >
+
+    Generating SEO reports to track progress.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Comprehensive SEO report detailing rankings, traffic, and conversion metrics.
+
+  agent: seo_reporter
+
+
+
+meta_description_task:
+
+  description: >
+
+    Generate meta descriptions and titles for web pages.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Set of optimized meta descriptions and titles for various pages.
+
+  agent: meta_description_creator
+
+
+
+ad_copy_task:
+
+  description: >
+
+    Create ad copy for Google Ads campaigns.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Collection of ad copies designed for maximum engagement.
+
+  agent: ad_copywriter
+
+
+
+sem_campaign_management_task:
+
+  description: >
+
+    Monitor and adjust paid search campaigns.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Adjusted campaign settings with performance improvements.
+
+  agent: sem_campaign_manager
+
+
+
+competitor_analysis_task:
+
+  description: >
+
+    Conduct competitor SEO analysis.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Detailed report comparing competitor strategies with actionable insights.
+
+  agent: competitor_analyst 
+
+
+
+seo_audit_task:
+
+  description: >
+
+    Audit website for SEO improvements.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Audit report highlighting areas of improvement with actionable recommendations.
+
+  agent: seo_auditor
+
+
+
+internal_linking_task:
+
+  description: >
+
+    Suggest internal linking strategies.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    Proposed internal linking structure that enhances navigation and authority distribution across the site.
+
+  agent: internal_link_strategist
+
+
+
+content_strategy_task:
+
+  description: >
+
+    Write long-tail keyword-based blog topics.
+
+    Topic: {topic}
+
+  expected_output: >
+
+    List of potential blog topics optimized around identified keywords.
+
+  agent: content_strategist
+
+
+    

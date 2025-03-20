@@ -1,0 +1,161 @@
+      
+competitor_analysis_task:
+
+  description: >
+
+    Conduct a detailed analysis of competitors’ social media strategies. Include their posting frequency, content types, engagement tactics, and successful campaigns.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    A comprehensive report summarizing competitors’ strategies, their strengths, and actionable insights for improvement.
+
+  agent: competitor_analyst
+
+
+
+content_planner_task:
+
+  description: >
+
+    Develop a monthly calendar outlining post types, platforms, themes, and posting schedules for the brand.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    A monthly social media calendar detailing posts, platforms, and posting times.
+
+  agent: content_planner
+
+
+
+brand_monitor_task:
+
+  description: >
+
+   Regularly track online mentions of the brand. Categorize mentions as positive, neutral, or negative, and recommend action plans where necessary.
+
+   Topic:{topic}
+
+  expected_output: >
+
+    A weekly report of brand mentions with a summary of sentiments and actionable suggestions.
+
+  agent: brand_monitor
+
+
+
+influencer_scout_task:
+
+  description: >
+
+    Research and compile a list of influencers whose values align with the brand. Include engagement rates, follower counts, and relevance.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    A curated list of 10 potential influencers with contact details, metrics, and alignment with the brand.
+
+  agent: influencer_scout
+
+
+
+customer_engagement_task:
+
+  description: >
+
+    Draft direct messages for responding to inquiries, thanking customers, and promoting campaigns. Ensure messages are professional yet relatable.
+
+    Topic:{topic}
+
+  expected_output: >
+
+   A library of 15 pre-drafted direct messages for various customer engagement scenarios.
+
+  agent: customer_engagement_expert
+
+
+
+metrics_analyst_task:
+
+  description: >
+
+    Gather social media metrics such as reach, engagement, impressions, and conversion rates. Compile insights and suggest improvements for future campaigns.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    A detailed monthly social media performance report with key metrics, insights, and suggestions for improvement.
+
+  agent: metrics_analyst
+
+
+
+hashtag_strategy_task:
+
+  description: >
+
+    Research trending and relevant hashtags for upcoming campaigns. Consider brand tone, audience, and content type.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    A list of 20 effective hashtags tailored to the campaign’s theme and goals.
+
+  agent: hashtag_strategist
+
+
+
+campaign_design_task:
+
+  description: >
+
+    Conceptualize and outline a social media challenge or giveaway. Include goals, rules, incentives, and expected outcomes.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    A detailed campaign plan with objectives, steps, rules, and prize structure.
+
+  agent: campaign_designer
+
+
+
+caption_creation_task:
+
+  description: >
+
+    Write creative captions for Instagram posts based on provided themes or visuals.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    A set of 20 captions for Instagram posts covering various themes.
+
+  agent: caption_creator
+
+
+
+scriptwriting_task:
+
+  description: >
+
+    Develop concise and engaging scripts for TikTok or YouTube Shorts. Focus on delivering the message effectively in under 60 seconds.
+
+    Topic:{topic}
+
+  expected_output: >
+
+    10 short-format video scripts optimized for TikTok/YouTube Shorts.
+
+  agent: script_writer
+
+
+    

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: #1a1a1a;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        h2 {
+            color: #2d3748;
+            margin-bottom: 2rem;
+            font-size: 1.875rem;
+            font-weight: 600;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: #4a5568;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+            transition: background-color 0.2s ease;
+        }
+
+        input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 4px;
+            border: 2px solid #cbd5e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #4299e1;
+            border-color: #4299e1;
+        }
+
+        input[type="file"] {
+            padding: 0.5rem;
+            border: 1px dashed #cbd5e0;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        a {
+            color: #4299e1;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        a:hover {
+            background-color: #ebf8ff;
+        }
+
+        button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #3182ce;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #edf2f7;
+        }
+
+        .status-pill {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-not-uploaded {
+            background-color: #fed7d7;
+            color: #9b2c2c;
+        }
+
+        .status-available {
+            background-color: #c6f6d5;
+            color: #276749;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Candidate Selection for Recruitment: {{ recruitment.job_title }}</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Resume</th>
+                            <th>ATS Score</th>
+                            <th>Booking Date</th>
+                            <th>Booking Time</th>
+                            <th>Meet Link</th>
+                            <th>Offer Letter</th>
+                            <th>Upload Offer Letter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for candidate in candidates %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="selected_candidates" value="{{ candidate.id }}" {% if candidate.selected %}checked{% endif %}>
+                            </td>
+                            <td>{{ candidate.name }}</td>
+                            <td>{{ candidate.email }}</td>
+                            <td><a href="{{ candidate.resume.url }}" target="_blank">View Resume</a></td>
+                            <td>{{ candidate.ats_score }}</td>
+
+                            {% with candidate.bookings.first.schedule as schedule %}
+                            <td>{{ schedule.date|default:"Not Booked" }}</td>
+                            <td>{{ schedule.time_slot|default:"N/A" }}</td>
+                            <td>
+                                {% if schedule.meet_link %}
+                                    <a href="{{ schedule.meet_link }}" target="_blank">Join Meet</a>
+                                {% else %}
+                                    <span class="status-pill status-not-uploaded">Not Available</span>
+                                {% endif %}
+                            </td>
+                            {% endwith %}
+
+                            <td>
+                                {% if candidate.offer_letter_document %}
+                                    <a href="{{ candidate.offer_letter_document.url }}" target="_blank">Download</a>
+                                {% else %}
+                                    <span class="status-pill status-not-uploaded">Not Uploaded</span>
+                                {% endif %}
+                            </td>
+
+                            <td><input type="file" name="offer_letter_document_{{ candidate.id }}"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <button type="submit">Submit Selection</button>
+        </form>
+    </div>
+
+    <script>
+        // Add smooth hover effect for checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const row = this.closest('tr');
+                if (this.checked) {
+                    row.style.backgroundColor = '#ebf8ff';
+                } else {
+                    row.style.backgroundColor = '';
+                }
+            });
+        });
+
+        // Add file upload preview
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
+                    this.title = fileName;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+      
+market_analyst_task:
+  description: >
+    Generate comprehensive reports analyzing current market trends. 
+    Topic: {topic}
+  expected_output: >
+    Detailed report on market trends with visual data.
+  agent: market_analyst
+
+swot_analyst_task:
+  description: >
+    Perform a SWOT analysis on current and upcoming sales campaigns. 
+    Topic: {topic}
+  expected_output: >
+    SWOT analysis report highlighting key insights
+  agent: swot_analyst
+
+competitor_analyst_task:
+  description: >
+    Build detailed reports on competitor activities, pricing strategies, 
+    and key differentiators. 
+    Topic: {topic}
+  expected_output: >
+    Competitor analysis report with strategic recommendations.
+  agent: competitor_analyst
+
+pricing_strategist_task:
+  description: >
+    Create dynamic pricing models that adapt to market conditions 
+    and competitor pricing trends. 
+    Topic: {topic}
+  expected_output: >
+    Dynamic pricing model documentation.
+  agent: pricing_strategist
+
+sales_pitch_specialist_task:
+  description: >
+    Draft personalized sales pitches emphasizing key differentiators and value propositions. 
+    Topic: {topic}
+  expected_output: >
+    Customized sales pitch documents for various demographics.
+  agent: sales_pitch_specialist
+
+    

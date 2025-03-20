@@ -1,0 +1,181 @@
+      
+review_analyst_task:
+
+  description: >
+
+    - Analyze customer reviews across multiple platforms to identify key themes, complaints, and praises.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Key product strengths, weaknesses, and actionable improvements of the topic.
+
+    Topic: {topic}
+
+  agent: review_analyst
+
+
+
+survey_designer_task:
+
+  description: >
+
+    - Design, distribute, and analyze surveys to uncover specific customer needs and priorities.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    A Comprehensive survey that can be used for analysis with product/service recommendations.
+
+    Topic: {topic}
+
+  agent: survey_designer
+
+
+
+trend_spotter_task:
+
+  description: >
+
+    - Monitor reports, news, and social media to identify emerging industry trends.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Trend insights highlighting opportunities and potential disruptions of the topic.
+
+    Topic: {topic}
+
+  agent: trend_spotter
+
+
+
+competitor_analyst_task:
+
+  description: >
+
+    - Analyze competitor campaigns, messaging, and promotional strategies for insights.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Competitive analysis with actionable recommendations for differentiation.
+
+    Topic: {topic}
+
+  agent: competitor_analyst
+
+
+
+demographic_specialist_task:
+
+  description: >
+
+    - Analyze census data, social media, and customer databases to build audience profiles.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Demographic breakdown including age, income, location, and preferences.
+
+    Topic: {topic}
+
+  agent: demographic_specialist
+
+
+
+persona_creator_task:
+
+  description: >
+
+    - Use research data to craft detailed customer personas for specific products or services.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Buyer personas with demographics, goals, pain points, and buying behaviors.
+
+    Topic: {topic}
+
+  agent: persona_creator
+
+
+
+geo_market_analyst_task:
+
+  description: >
+
+    - Use geographic and market data to evaluate regions for business expansion opportunities.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Market opportunity analysis with recommendations for targeted expansion.
+
+    Topic: {topic}
+
+  agent: geo_market_analyst
+
+
+
+sentiment_analyst_task:
+
+  description: >
+
+    - Monitor brand mentions across social media and online platforms to track sentiment trends.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Sentiment analysis with recommendations for improving brand perception.
+
+    Topic: {topic}
+
+  agent: sentiment_analyst
+
+
+
+gap_analyst_task:
+
+  description: >
+
+    - Identify unmet customer needs by comparing competitor offerings and product portfolio.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    Gap analysis with opportunities for new features or services.
+
+    Topic: {topic}
+
+  agent: gap_analyst
+
+
+
+strategic_planner_task:
+
+  description: >
+
+    - Conduct internal and external analysis of the company’s position in the market.
+
+    - Once the task is completed, update the task status using the TaskStatusUpdate tool.
+
+  expected_output: >
+
+    A detailed SWOT analysis with strategic recommendations for business improvement.
+
+    Topic: {topic}
+
+  agent: strategic_planner
+
+
+    

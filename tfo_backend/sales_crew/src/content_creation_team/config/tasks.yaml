@@ -1,0 +1,174 @@
+sales_brochure_specialist_task:
+  description: >
+    
+    - {topic} Research and draft a **visually appealing** and **persuasive** sales brochure (or set of brochures) that highlights the product’s key features, benefits, and unique selling points (USPs).
+    - Ensure the design is **suitable for both print and digital distribution** (e.g., PDF, editable formats).
+    - Maintain a **professional, engaging tone** that resonates with the target audience.
+    - Use **bold text** for headings, *italicized text* for subheadings, and bullet points for key details.
+    - Once completed, update the task status using the `TaskStatusUpdate` tool.
+  expected_output: >
+    **Output Model:** `SalesBrochure`  
+    ```python
+    class SalesBrochure(BaseModel):
+        response: str  # e.g., "Sales brochure for {product_name} is created"
+        brochure: str  # Structured content of the sales brochure
+    ```
+    **Example Output:**
+    ```json
+    {
+        "response": "Sales brochure for SmartFit Pro Watch is created.",
+        "brochure": "**SmartFit Pro Watch - Your Ultimate Fitness Companion**\n\n*Key Features:*\n- **24/7 Heart Rate Monitoring**\n- **Sleep Tracking & Analysis**\n- **Waterproof & Sweat Resistant**\n- **Customizable Watch Faces**\n\n*Why Choose SmartFit Pro?*\n- Tracks your fitness with precision\n- Lightweight & stylish design\n- Long-lasting battery life\n\n*Order Now & Stay Fit!*"
+    }
+    ```
+  agent: sales_brochure_specialist
+
+email_template_creator_task:
+  description: >
+    - Topic is {topic}
+    - Develop **three persuasive and customizable** cold email templates for different sales scenarios:
+      1. **Lead Generation**
+      2. **Follow-up & Nurturing**
+      3. **Re-engagement**
+    - Each template must include:
+      - **A compelling subject line**
+      - **A structured email body with placeholders for personalization**
+      - **A strong call to action (CTA)**
+    - Ensure the tone is **engaging, professional, and conversion-focused**.
+    - Once completed, update the task status using the `TaskStatusUpdate` tool.
+  expected_output: >
+    **Output Model:** `EmailTemplateOutput`
+    ```python
+    class EmailTemplateOutput(BaseModel):
+        response: str  # e.g., "Email templates for {campaign_name} are created"
+        templates: List[EmailTemplate]  # List of generated email templates
+    ```
+    **Example Output:**
+    ```json
+    {
+        "response": "Email templates for the Spring Promotion Campaign are created.",
+        "templates": [
+            {
+                "subject": "Boost Your Productivity with SmartDesk!",
+                "body": "Hi {first_name},\n\nUpgrade your workspace with **SmartDesk Pro**. Get 20% off for a limited time!\n\nBest,\n[Your Name]",
+                "call_to_action": "Claim your 20% discount now!"
+            },
+            {
+                "subject": "Still Thinking About SmartDesk? Let’s Talk!",
+                "body": "Hey {first_name},\n\nWe noticed you checked out **SmartDesk Pro** but haven't made a move yet. Any questions?\n\nBest,\n[Your Name]",
+                "call_to_action": "Book a free demo today!"
+            }
+        ]
+    }
+    ```
+  agent: email_template_creator
+
+product_description_writer_task:
+  description: >
+    - Topic is {topic}
+    - Craft **five engaging and persuasive product descriptions** that highlight the unique value proposition of each product.
+    - Ensure that each description:
+      - **Clearly communicates** the product’s key features and benefits.
+      - **Addresses customer pain points** and how the product solves them.
+      - **Aligns with the brand’s tone** (formal, casual, technical, etc.).
+    - Once completed, update the task status using the `TaskStatusUpdate` tool.
+  expected_output: >
+    **Output Model:** `ProductDescriptionOutput`
+    ```python
+    class ProductDescriptionOutput(BaseModel):
+        response: str  # e.g., "Product descriptions for {category_name} are created"
+        descriptions: List[ProductDescription]  # List of generated product descriptions
+    ```
+    **Example Output:**
+    ```json
+    {
+        "response": "Product descriptions for skincare products are created.",
+        "descriptions": [
+            {
+                "product_name": "GlowBoost Vitamin C Serum",
+                "description": "Experience radiant skin with GlowBoost! This **fast-absorbing serum** brightens your complexion while reducing dark spots.",
+                "key_features": [
+                    "Packed with **Vitamin C & Hyaluronic Acid**",
+                    "Reduces **dark spots & pigmentation**",
+                    "Hydrates & plumps skin"
+                ],
+                "pain_points_addressed": [
+                    "Dull and uneven skin tone",
+                    "Dryness and dehydration"
+                ]
+            }
+        ]
+    }
+    ```
+  agent: product_description_writer
+
+presentation_designer_task:
+  description: >
+    - Topic is {topic}
+    - Design a **visually compelling and structured** PowerPoint presentation with **10 slides** showcasing:
+      - **Product key features & benefits**
+      - **Customer success stories & testimonials**
+      - **Unique selling points (USPs)**
+      - **A strong closing CTA**
+    - Once completed, update the task status using the `TaskStatusUpdate` tool.
+  expected_output: >
+    **Output Model:** `PresentationOutput`
+    ```python
+    class PresentationOutput(BaseModel):
+        topic: str
+        slides: List[Slide]
+    ```
+    **Example Output:**
+    ```json
+    {
+        "topic": "AI-Powered Marketing Tools",
+        "slides": [
+            {
+                "title": "Introduction to AI in Marketing",
+                "content": "AI is revolutionizing marketing with personalized automation and data-driven insights.",
+                "images": ["slide1_image.jpg"],
+                "testimonials": []
+            },
+            {
+                "title": "Benefits of AI Tools",
+                "content": "AI saves time, increases accuracy, and enhances customer targeting.",
+                "images": ["slide2_image.jpg"],
+                "testimonials": ["'AI tools helped us boost engagement by 30%' - Marketing Manager"]
+            }
+        ]
+    }
+    ```
+  agent: presentation_designer
+
+social_media_content_creator_task:
+  description: >
+    - Topic is {topic}
+    - Create **five highly engaging LinkedIn posts** optimized for visibility and engagement.
+    - Each post should:
+      - Be **tailored to a specific customer segment**.
+      - Highlight **key benefits, success stories, or industry insights**.
+      - Include a **compelling caption** that drives engagement.
+      - Feature **relevant hashtags** to boost discoverability.
+      - Have a **clear CTA** to encourage interaction.
+    - Once completed, update the task status using the `TaskStatusUpdate` tool.
+  expected_output: >
+    **Output Model:** `SocialMediaContentOutput`
+    ```python
+    class SocialMediaContentOutput(BaseModel):
+        response: str  # e.g., "Social media content for {campaign_name} is created"
+        posts: List[SocialMediaPost]  # List of LinkedIn posts
+    ```
+    **Example Output:**
+    ```json
+    {
+        "response": "Social media content for Product X is created.",
+        "posts": [
+            {
+                "post_title": "Introducing SmartFit Pro!",
+                "caption": "Meet **SmartFit Pro** - the watch that keeps up with your lifestyle! ⌚🔥",
+                "hashtags": ["#Smartwatch", "#Fitness", "#WearableTech"],
+                "call_to_action": "Shop now and get 15% off!"
+            }
+        ]
+    }
+    ```
+  agent: social_media_content_creator
