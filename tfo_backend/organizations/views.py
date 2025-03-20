@@ -251,10 +251,9 @@ class EODReportAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
-        # user = request.user
-        # staff = get_object_or_404(OrganizationStaff, user=user)
-        # organization = staff.organization
-        organization = Organization.objects.get(id="e6a7be4d-8e35-4377-add3-b4b6de6d6b43")
+        user = request.user
+        staff = get_object_or_404(OrganizationStaff, user=user)
+        organization = staff.organization
         reports = EODReport.objects.filter(organization=organization).order_by("-date")
 
         # ✅ Check if user requested CSV format
