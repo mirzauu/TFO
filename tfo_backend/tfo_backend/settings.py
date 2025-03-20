@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure--nr#q(=+dy7i^cc6r-tt1_k&ah@#94c=zp6&6x77)#8t^42!v@
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["16.170.140.163","0.0.0.0"]
+ALLOWED_HOSTS = ["16.170.140.163","0.0.0.0","localhost","127.0.0.1"]
 # os.environ["OPENAI_MODEL"] = "gpt-3.5-turbo"
 # os.environ["SERPER_API_KEY"] = ""
 # os.environ["DATAFORSEO_LOGIN"] = "prasadparit006@gmail.com"
@@ -79,7 +79,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"
 ]
 
-CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/","http://34.230.50.181","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
+CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/","http://16.170.140.163/","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_METHODS = [
@@ -115,7 +115,10 @@ ROOT_URLCONF = "tfo_backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["templates"],
+        'DIRS': [
+                    os.path.join(BASE_DIR, "templates"),
+                    os.path.join(BASE_DIR, "dist2"),  # Ensure Django finds dist2
+                ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -158,7 +161,7 @@ DATABASES = {
         'CONN_MAX_AGE': 0,           
     }
 }
-SITE_URL = "http://v5dmsmd1-8000.inc1.devtunnels.ms"
+SITE_URL = "http://v5dmsmd1-9000.inc1.devtunnels.ms"
 
 
 REST_FRAMEWORK = {
