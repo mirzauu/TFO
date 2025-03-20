@@ -212,7 +212,7 @@ protobuf==5.29.2
 psycopg==3.2.5
 psycopg-binary==3.2.5
 psycopg-pool==3.2.6
-psycopg2==2.9.10
+
 pulsar-client==3.5.0
 pure_eval==0.2.3
 py==1.11.0
@@ -285,12 +285,11 @@ snowflake-connector-python==3.13.0
 sortedcontainers==2.4.0
 soupsieve==2.6
 spider-client==0.1.25
-SQLAlchemy==2.0.36
-sqlparams==6.1.0
+
 sqlparse==0.5.3
 stack-data==0.6.3
 starlette==0.41.3
-streamlit==1.41.1
+
 sympy==1.13.3
 tabulate==0.9.0
 tenacity==9.0.0
