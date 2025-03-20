@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure--nr#q(=+dy7i^cc6r-tt1_k&ah@#94c=zp6&6x77)#8t^42!v@
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["16.170.140.163","0.0.0.0"]
 # os.environ["OPENAI_MODEL"] = "gpt-3.5-turbo"
 # os.environ["SERPER_API_KEY"] = ""
 # os.environ["DATAFORSEO_LOGIN"] = "prasadparit006@gmail.com"
