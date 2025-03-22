@@ -62,13 +62,13 @@ CORS_ALLOW_CREDENTIALS=True
 CORS_ORIGIN_WHITELIST=[
     "http://localhost:9090",  
     "http://localhost:3000",  
-    "http://16.170.140.163",
+    "http://13.61.154.213",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"
 ]
 CORS_ORIGIN_REGEX_WHITELIST=[ "http://localhost:5173",
      "http://localhost:9090",  
     "http://localhost:3000",  
-    "http://16.170.140.163",
+    "http://13.61.154.213",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"
 
 ]
@@ -77,11 +77,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app",  # Production domain
     "http://localhost:5173",  
     "http://localhost:9090",  
-    "http://16.170.140.163",
+    "http://13.61.154.213",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"
 ]
 
-CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/","http://16.170.140.163","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
+CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/","http://13.61.154.213","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_METHODS = [
