@@ -329,3 +329,15 @@ class UserLoginLog(models.Model):
 
     def __str__(self):
         return f"{self.user.username} logged in at {self.timestamp}"
+    
+
+class TicketIssue(models.Model):
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    email = models.EmailField()
+    username = models.CharField(max_length=255)
+    organization = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Ticket by {self.username} - {self.organization}"        

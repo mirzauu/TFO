@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from .helpers import OrganizationToken
 from rest_framework.permissions import IsAuthenticated
-from .models import Organization,OrganizationStaff,AgentChatSession,AIAgent,ChatMessage,Organization, LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,EODReport
+from .models import TicketIssue,OrganizationStaff,AgentChatSession,AIAgent,ChatMessage,Organization, LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,EODReport
 from .serializers import OrganizationDetailsSerializer,AgentChatSessionSerializer,ChatMessageSerializer,CreateChatMessageSerializer,ChatMessageIDSerializer,LinkedInAPIKeySerializer, SMTPConfigurationSerializer, EODReportConfigurationSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
@@ -322,3 +322,44 @@ class OrganizationLogoutView(APIView):
             return response
         except Exception as e:
             return Response({"error": "Invalid token or already logged out"}, status=400)
+        
+
+class RaiseTicketView(APIView):
+    """
+    API for users to raise a ticket.
+    The user must be authenticated.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        email = user.email
+        username = user.username
+        message = request.data.get('message')
+
+        if not message:
+            return Response({"error": "Message is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Retrieve the organization from the user's data
+        try:
+            organization_staff = OrganizationStaff.objects.select_related('organization').get(user=user)
+            organization_name = organization_staff.organization.name
+        except OrganizationStaff.DoesNotExist:
+            return Response({"error": "User is not linked to any organization"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Save ticket issue
+        ticket = TicketIssue.objects.create(
+            user=user,
+            email=email,
+            username=username,
+            organization=organization_name,
+            message=message
+        )
+
+        return Response({
+            "message": "Ticket raised successfully",
+            "ticket_id": ticket.id,
+            "username": username,
+            "organization": organization_name
+        }, status=status.HTTP_201_CREATED)           

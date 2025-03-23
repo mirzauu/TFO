@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure--nr#q(=+dy7i^cc6r-tt1_k&ah@#94c=zp6&6x77)#8t^42!v@
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["16.170.140.163","0.0.0.0","localhost","127.0.0.1"]
+ALLOWED_HOSTS = ["13.61.220.76","0.0.0.0","localhost","127.0.0.1"]
 # os.environ["OPENAI_MODEL"] = "gpt-3.5-turbo"
 # os.environ["SERPER_API_KEY"] = ""
 # os.environ["DATAFORSEO_LOGIN"] = "prasadparit006@gmail.com"
@@ -62,13 +62,13 @@ CORS_ALLOW_CREDENTIALS=True
 CORS_ORIGIN_WHITELIST=[
     "http://localhost:9090",  
     "http://localhost:3000",  
-    "http://13.61.154.213",
+    "http://13.61.220.76",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"
 ]
 CORS_ORIGIN_REGEX_WHITELIST=[ "http://localhost:5173",
      "http://localhost:9090",  
     "http://localhost:3000",  
-    "http://13.61.154.213",
+    "http://13.61.220.76",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"
 
 ]
@@ -77,11 +77,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app",  # Production domain
     "http://localhost:5173",  
     "http://localhost:9090",  
-    "http://13.61.154.213",
+    "http://13.61.220.76",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"
 ]
 
-CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/","http://13.61.154.213","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
+CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/","http://13.61.220.76","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_METHODS = [
@@ -149,6 +149,8 @@ CHANNEL_LAYERS = {
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis as the broker
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Redis as the result backend
 CELERY_RESULT_BACKEND = 'django-db'
+CELERY_TASK_SOFT_TIME_LIMIT = 3  # Warns the task before being killed
+CELERY_TASK_TIME_LIMIT = 5       # Hard kill if it exceeds 5 seconds
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -163,7 +165,7 @@ DATABASES = {
         'CONN_MAX_AGE': 0,           
     }
 }
-SITE_URL = "http://v5dmsmd1-9000.inc1.devtunnels.ms"
+SITE_URL = "http://13.61.220.76"
 
 
 REST_FRAMEWORK = {

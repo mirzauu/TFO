@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import OrganizationLoginView,OrganizationHomePageView,AgentChatSessionView,CreateChatMessageView,SettingsPageAPIView,EODReportAPIView,OrganizationLogoutView
+from .views import OrganizationLoginView,OrganizationHomePageView,AgentChatSessionView,CreateChatMessageView,SettingsPageAPIView,EODReportAPIView,OrganizationLogoutView,RaiseTicketView
 
 urlpatterns = [
      path('login/', OrganizationLoginView.as_view(), name='organization-login'),
@@ -9,5 +9,6 @@ urlpatterns = [
      path('agents/<int:agent_id>/create-chat-message/', CreateChatMessageView.as_view(), name='create-chat-message'),
      path('settings/', SettingsPageAPIView.as_view(), name='settings-page'),
      path('eod-report/', EODReportAPIView.as_view(), name='eod-report'),
+     path('raise-ticket/', RaiseTicketView.as_view(), name='raise-ticket'),
      
 ]
