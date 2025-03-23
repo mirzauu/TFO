@@ -252,15 +252,3 @@ ORGANIZATION_JWT_SETTINGS = {
 # Marketing research 4
 # Seo 3
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "alimirsa123@gmail.com"
-EMAIL_HOST_PASSWORD = "myxz onbb acaf bnot"
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-# SMTP_SERVER = "smtp.gmail.com"
-# SMTP_PORT = 587
-# EMAIL_ADDRESS = "alimirsa123@gmail.com"  
-# EMAIL_PASSWORD = "myxz onbb acaf bnot"
