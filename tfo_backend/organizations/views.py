@@ -69,20 +69,18 @@ class OrganizationHomePageView(APIView):
     def get(self, request):
         # Extract user information from the token
         token = request.auth
-        user_role = token.get('role')
         user_entity_id = token.get('user_id')  
-        print(user_entity_id)# Assuming entity_id is included
+        print(user_entity_id)  # Debugging
 
-      
         try:
-            # Query OrganizationStaff to find the related organization
+            # Get the OrganizationStaff record for the current user
             organization_staff = OrganizationStaff.objects.select_related('organization').get(user_id=user_entity_id)
             organization = organization_staff.organization
         except OrganizationStaff.DoesNotExist:
             return Response({'error': 'Organization not found for the given user'}, status=404)
 
-        # Serialize and return organization details
-        serializer = OrganizationDetailsSerializer(organization)
+        # Pass only the logged-in user's details to the serializer
+        serializer = OrganizationDetailsSerializer(organization, context={'request_user_id': user_entity_id})
         return Response(serializer.data, status=200)
     
 class AgentChatSessionView(APIView):

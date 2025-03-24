@@ -7,8 +7,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tfo_backend.settings')
 
 celery_app = Celery('tfo_backend')
 celery_app.config_from_object('django.conf:settings', namespace='CELERY')
-celery_app.conf.task_time_limit = 5  # Hard limit (force kill)
-celery_app.conf.task_soft_time_limit = 3  # Grace period (warning)
+celery_app.conf.task_time_limit = 500  # Hard limit (force kill)
+celery_app.conf.task_soft_time_limit = 300  # Grace period (warning)
 
 print(celery_app.conf.task_time_limit)
 celery_app.autodiscover_tasks()

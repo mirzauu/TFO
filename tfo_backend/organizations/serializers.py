@@ -23,11 +23,16 @@ class OrganizationDetailsSerializer(serializers.ModelSerializer):
     Serializer for Organization details, including the package details.
     """
     package = PackageSerializer(source='subscription.package')
-    user_details = OrganizationStaffSerializer(source="staff",many=True, read_only=True)
+    user_details = serializers.SerializerMethodField()
 
     class Meta:
         model = Organization
         fields = ['id', 'name', 'package', 'user_details']
+
+    def get_user_details(self, obj):
+        request_user_id = self.context.get('request_user_id')
+        user = obj.staff.filter(user_id=request_user_id).first()  # Get only the logged-in user
+        return OrganizationStaffSerializer(user).data if user else None
 
 
 
