@@ -286,9 +286,10 @@ def manual(message_id,message):
         tasks=[context_response_task],
         process=Process.hierarchical,
         verbose=True,
-         memory=False,  
+        memory=False,  
+        cache=False,  
         manager_agent=onboarding_team.create_onboarding_manager(), 
-        manager_llm=openapi_llm # Main agent
+    
     )
 
     response = crew.kickoff(inputs=inputs)

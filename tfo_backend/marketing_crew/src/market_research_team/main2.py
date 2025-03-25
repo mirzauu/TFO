@@ -6,8 +6,6 @@ from organizations.models import ChatMessage
 import json
 from django.shortcuts import get_object_or_404
 
-import re
-from pymongo import MongoClient
 
 from tfo_backend.mongodb import chat_collection,db
 

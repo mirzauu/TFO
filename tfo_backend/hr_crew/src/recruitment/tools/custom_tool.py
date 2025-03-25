@@ -8,7 +8,8 @@ load_dotenv()
 from hr_crew.models import Recruitment, RecruitmentTask,Candidate,Schedule
 from django.shortcuts import get_object_or_404
 from typing import Literal
-import PyPDF2
+import pypdf
+
 import random
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -302,7 +303,6 @@ class ResumeFetcherTool(BaseTool):
 
 
 
-import PyPDF2
 
 class ResumeEvaluatorInput(BaseModel):
     """Input schema for ResumeEvaluatorTool."""
@@ -327,7 +327,7 @@ class ResumeEvaluatorTool(BaseTool):
 
             try:
                 with open(resume_path, "rb") as file:
-                    reader = PyPDF2.PdfReader(file)
+                    reader = pypdf.PdfReader(file)
                     text = " ".join([page.extract_text() for page in reader.pages if page.extract_text()])
 
                 match_status = "MATCH" if job_description.lower() in text.lower() else "NO MATCH"
@@ -465,7 +465,7 @@ class ATSEvaluatorTool(BaseTool):
 
             try:
                 with open(resume_path, "rb") as file:
-                    reader = PyPDF2.PdfReader(file)
+                    reader =pypdf.PdfReader(file)
                     text = " ".join([page.extract_text() for page in reader.pages if page.extract_text()])
 
                 # Simulate ATS scoring (Example: Score between 50-100 based on text similarity)

@@ -5,11 +5,6 @@ import requests
 
 from django.core.exceptions import ObjectDoesNotExist
 from organizations.models import Organization,OrganizationStaff,SMTPConfiguration,ChatMessage,LinkedInAPIKey
-# Email credentials
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-EMAIL_ADDRESS = "alimirsa123@gmail.com"
-EMAIL_PASSWORD = "myxz onbb acaf bnot"
 
 def get_linkedin_access_token(chat_message_id):
     print("Chat Message ID:", chat_message_id)

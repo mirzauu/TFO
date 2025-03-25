@@ -6,7 +6,7 @@ from hr_crew.src.recruitment.tools.custom_tool import ListPDFsTool,TaskStatusUpd
 from hr_crew.src.recruitment.tools.email import EmailSenderTool,InterviewNotificationTool
 from hr_crew.src.recruitment.tools.job_posting import JobPostingTool,JobPostGeneratorTool
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+
 from pydantic import BaseModel, Field
 import os
 from organizations.models import ChatMessage
@@ -194,7 +194,7 @@ resume_screening_agent = Agent(
     goal="Efficiently screen resumes based on set criteria.",
     verbose=True,
     allow_delegation=True,
-    tools=[ListPDFsTool(),PDFSearchTool()],
+    tools=[ListPDFsTool()],
     backstory=(
         """
         - An analytical expert with a background in data analysis and recruitment, 

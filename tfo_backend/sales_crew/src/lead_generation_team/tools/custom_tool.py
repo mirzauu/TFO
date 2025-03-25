@@ -1,4 +1,5 @@
-from crewai_tools import tool
+from langchain.tools import tool,BaseTool
+from pydantic import BaseModel, Field
 
 @tool
 class LeadQualificationTool:

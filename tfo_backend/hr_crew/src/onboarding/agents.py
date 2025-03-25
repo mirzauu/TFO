@@ -45,7 +45,7 @@ class OnboardingTeam:
                 "are executed, streamlining the onboarding process."
             ),
             allow_delegation=True,
-            memory=True 
+
             
         )   
     
@@ -112,7 +112,7 @@ class OnboardingTeam:
             tools=[],  # Delegation handled through CrewAI's agent coordination
             llm=self.OpenAIGPT4,
             verbose=True,
-            memory=True,
+    
             allow_delegation=True,
             max_rpm=15,
 

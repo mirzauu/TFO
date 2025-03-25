@@ -1,4 +1,5 @@
-from crewai.tools import BaseTool
+from langchain.tools import tool,BaseTool
+from pydantic import BaseModel, Field
 from typing import Type, Literal
 from pydantic import BaseModel, Field
 

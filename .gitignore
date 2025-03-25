@@ -5,4 +5,6 @@ __pycache__/
 /.env
 
 /tfo_backend/env2
+/tfo_backend/db
+/tfo_backend/env4
 /tfo_backend/env3

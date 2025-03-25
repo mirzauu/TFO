@@ -32,8 +32,7 @@ class OrganizationDetailsSerializer(serializers.ModelSerializer):
     def get_user_details(self, obj):
         request_user_id = self.context.get('request_user_id')
         user = obj.staff.filter(user_id=request_user_id).first()  # Get only the logged-in user
-        return OrganizationStaffSerializer(user).data if user else None
-
+        return [OrganizationStaffSerializer(user).data] if user else []
 
 
 
