@@ -174,7 +174,7 @@ class OnboardingTasks:
             onboarding_task = get_object_or_404(EmployeeOnboardingTask, onboarding=onboarding, task_name=task_name)
             onboarding_task.final_report=str(result)
 
-            if task_name in ["Training Plan Development Task", "Interview Preparation"]:
+            if task_name in ["Training Plan Development Task", "Interview Preparation","Document Verification Task"]:
                 onboarding_task.status = "COMPLETED"
             onboarding_task.save()
 

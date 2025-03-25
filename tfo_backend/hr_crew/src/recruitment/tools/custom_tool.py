@@ -294,7 +294,7 @@ class ResumeFetcherTool(BaseTool):
         # Collect candidate details
         for candidate in candidates:
             if candidate.resume:  # Assuming 'resume' is a file path field
-                resumes.append({"name": candidate.name, "resume_path": candidate.resume})
+                resumes.append({"name": candidate.name, "resume_path": f"media/{candidate.resume}"})
             else:
                 resumes.append({"name": candidate.name, "resume_path": "No resume available"})
 

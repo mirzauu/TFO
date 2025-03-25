@@ -49,7 +49,7 @@ def update_task_status(result,task_name,chat_message_id):
             # Update the status of the task
             recruitment_task.final_report = cleaned_result
 
-            if task_name in ["Job Posting", "Interview Preparation"]:
+            if task_name in ["Job Posting", "Interview Preparation","Application Tracking"]:
                 recruitment_task.status = "COMPLETED"
 
             recruitment_task.save()
@@ -203,35 +203,6 @@ resume_screening_agent = Agent(
         """
     ),
 )
-from typing import Tuple, Any
-
-def resume_screening_guardrail(task_output) -> Tuple[bool, Any]:
-    """
-    Validates the application count before proceeding to resume screening.
-    - If `application_count > 0`, proceed with resume screening.
-    - If `application_count == 0`, stop execution and mark task as "PENDING".
-    """
-    
-    print("DEBUG: TaskOutput structure:", task_output)  # Debugging line
-
-    # Handle dictionary format
-    if isinstance(task_output, dict):
-        application_count = task_output.get("application_count", None)
-    else:
-        # Handle object format
-        try:
-            application_count = getattr(task_output, "application_count", None)
-        except AttributeError:
-            return False, "Error: Unable to retrieve application count."
-
-    if application_count is None:
-        return False, "Error: Application count is missing in TaskOutput."
-
-    if application_count > 0:
-        return True, f"Proceeding with resume screening. {application_count} applications found."
-    else:
-        return False, "No applications found. Resume screening task is set to PENDING."
-
 
 resume_screening_agent_task = Task(
     description=(
@@ -264,13 +235,13 @@ resume_screening_agent_task = Task(
           - "name": "Jane Smith", "resume_path": "path/to/resume.pdf", "status": "NO MATCH"
         
         *Task Status Update:*
-        - Resume Directory Status: {resume_directory} is empty → Task set to "PENDING"
+        - Resume Directory Status:  is empty → Task set to "PENDING"
         - Final Task Status: [COMPLETED/PENDING]
     """,
     agent=resume_screening_agent,
-    tools=[ResumeFetcherTool(), ResumeEvaluatorTool(result_as_answer=True), TaskStatusUpdate()],
+    tools=[ResumeFetcherTool(), ResumeEvaluatorTool(), TaskStatusUpdate(result_as_answer=True)],
        callback=lambda result: update_task_status(result, task_name="Resume Screening", chat_message_id=chat_message_id),
-        guardrail=resume_screening_guardrail, 
+       
 
  
 
@@ -495,7 +466,7 @@ interview_preparation_agent_task = Task(
     expected_output="""
         - Do not make up any information.
         - A well strucured relevant interview questions ready for interviewers with an heading "INTERVIEW QUESTION".
-        - Dynamically update the task status based on success or failure.
+ 
     """,
     agent=interview_preparation_agent,
     tools=[SerperDevTool()],
@@ -683,7 +654,7 @@ tasks=[
 
 from django.db import models
 from django.shortcuts import get_object_or_404
-from hr_crew.models import Recruitment,RecruitmentTask
+from hr_crew.models import Recruitment,RecruitmentTask,Candidate
 import json
 
    
@@ -783,6 +754,19 @@ def reload(message_id):
     chat_message =message_id
     recruitment = get_object_or_404(Recruitment, session_id=message_id)
     print("re",chat_message.id)
+    candidate_count = Candidate.objects.filter(recruitment=recruitment).count()
+    
+    if candidate_count != recruitment.expected_reach_out:
+        recruitment.session.save_message_to_mongo({
+            "Type": "text",
+            "message": f"{candidate_count} applications found.Task will proceed when {recruitment.expected_reach_out} applied",
+            "task_name": "TASK message",
+            "user": "AI",
+          
+        }, task_name="TASK message")
+        return f"{candidate_count} applications found.Task will proceed when {recruitment.expected_reach_out} applied"
+
+
     # Create the inputs JSON object with details from Recruitment instance
     inputs = {
 

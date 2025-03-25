@@ -33,7 +33,7 @@ def main(message_id, form):
     tasks = [
         onboarding_task.create_orientation_task(newhireinfo=form),
         onboarding_task.create_document_automation_task(newhireinfo=form),
-        onboarding_task.document_verification(newhireinfo=form),
+      
         onboarding_task.create_welcome_email_task(newhireinfo=form),
         onboarding_task.create_it_setup_coordination_task(newhireinfo=form),
         onboarding_task.create_policy_compliance_task(newhireinfo=form),
@@ -123,14 +123,14 @@ def main(message_id, form):
     return str(results)
 
 
-from hr_crew.models import Onboarding, EmployeeOnboardingTask
+from hr_crew.models import Onboarding, EmployeeOnboardingTask,EmployeeDocuments
 from hr_crew.src.onboarding.agents import OnboardingTeam 
 import logging
 
 from crewai import Crew, Process
 
 logger = logging.getLogger(__name__)
-
+from django.conf import settings
 def retry(chat_id):
     """
     Retry pending or failed tasks related to the given ChatMessage ID.
@@ -139,7 +139,25 @@ def retry(chat_id):
     onboarding = Onboarding.objects.filter(session=chat_id).first()
     if not onboarding:
         raise ValueError(f"No Onboarding found for ChatMessage with ID {chat_id}.")
-
+    
+    employee_document = EmployeeDocuments.objects.filter(onboarding=onboarding).first()
+    if not employee_document:
+        onboarding.session.save_message_to_mongo({
+                        "Type": "text",
+                        "message": f"⚠️ Employee not upload any documents",
+                        "task_name": "TASK STATUS",
+                        "user": "AI",
+                        },task_name="TASK STATUS")
+        return f"⚠️ Employee not upload any documents"
+    # Check if documents are verified
+    if not employee_document.verified:
+        onboarding.session.save_message_to_mongo({
+                        "Type": "text",
+                        "message": f"⚠️ Document verification pending for {onboarding.employee_name}. Please verify using {settings.SITE_URL}/o/employee-documents/{onboarding.id}/",
+                        "task_name": "TASK STATUS",
+                        "user": "AI",
+                        },task_name="TASK STATUS")
+        return f"⚠️ Document verification pending for {onboarding.employee_name}. Please verify using {settings.SITE_URL}/o/employee-documents/{onboarding.id}/"
     # Create a form dictionary from the onboarding data
     form = {
         "employee_id": onboarding.employee_id,
@@ -148,7 +166,7 @@ def retry(chat_id):
         "id": onboarding.id,
         "chat_id":chat_id,
     }
-
+    
     # Define task-method pairs for dynamic task creation
     task_methods = [
         (onboarding_task.create_orientation_task, "Orientation task", {"newhireinfo": form}),

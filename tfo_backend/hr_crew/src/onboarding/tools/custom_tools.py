@@ -545,16 +545,29 @@ class VerifyDocumentTool(BaseTool):
         subject='Document Verifications'
         content=f"{settings.SITE_URL}/o/upload-documents/{chat_message_id}/"
         print(f"Verifying document with ID: {chat_message_id}")
+        smtp_details = get_smtp_details(chat_message_id)
+        print("email",smtp_details)
+
+        if "error" in smtp_details:
+            return f"❌ Error: {smtp_details['error']}"
+
+        smtp_host = smtp_details["smtp_host"]
+        smtp_port = smtp_details["smtp_port"]
+        sender_email = smtp_details["sender_email"]
+        password = smtp_details["password"]
+
+        if not smtp_host or not smtp_port or not sender_email or not password:
+            return "❌ Error: Incomplete SMTP configuration."
         try:
             msg = MIMEMultipart()
-            msg['From'] = EMAIL_ADDRESS
+            msg['From'] = sender_email
             msg['To'] = recipient_email
             msg['Subject'] = subject
             msg.attach(MIMEText(content, 'plain'))
 
-            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
                 server.starttls()
-                server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+                server.login(sender_email, password)
                 server.send_message(msg)
 
             return f"✅ Email successfully sent to {employee_name} at {recipient_email}"
@@ -591,7 +604,7 @@ class VerifyUploadedDocumentTool(BaseTool):
             if employee_document.verified:
                 return f"✅ Document verification completed successfully for {onboarding.employee_name}."
             else:
-                return f"⚠️ Document verification pending for {onboarding.employee_name}. Please verify using {settings.SITE_URL}/o/employee-documents/{chat_message_id}/"
+                return f"⚠️ Document verification pending for {onboarding.employee_name}. Please verify using {settings.SITE_URL}/o/employee-documents/{instance_id}/"
 
         except Exception as e:
             return f"❌ Error verifying document for onboarding ID {instance_id}: {str(e)}"
