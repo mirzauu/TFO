@@ -842,49 +842,49 @@ def reload(message_id):
 
 def manual(message_id,message):
 
-  
+    return "Please proceed with form submission"
    # Query MongoDB to find all messages related to the given chat_message_id
-    messages = list(chat_collection.find({"chat_message_id": str(message_id)}))
+    # messages = list(chat_collection.find({"chat_message_id": str(message_id)}))
 
     
 
-    # Convert ObjectId to string for readability and structure the data
-    message_dict = {"user": [], "AI": []}
+    # # Convert ObjectId to string for readability and structure the data
+    # message_dict = {"user": [], "AI": []}
 
-    for msg in messages:
-        try:
-            msg["_id"] = str(msg["_id"])  # Convert ObjectId to string
-            message_dict[msg["user"]].append(msg["message"])  # Append message
-        except KeyError:
-            print(messages)
+    # for msg in messages:
+    #     try:
+    #         msg["_id"] = str(msg["_id"])  # Convert ObjectId to string
+    #         message_dict[msg["user"]].append(msg["message"])  # Append message
+    #     except KeyError:
+    #         print(messages)
 
-    print(message_dict)
+    # print(message_dict)
 
 
 
-    agents=[
-            job_posting_specialist,
-            customer_service_agent,
-            sourcing_automation_agent,
-            resume_screening_agent,
-            interview_coordinator,
-            interview_preparation_agent,
-            offer_letter_generator,
-            ats_manager,
-        ]
-    human_task_crew = Crew(
-            agents=agents,
-            tasks=[process_pending_tasks_task],
-            process=Process.hierarchical,
-            verbose=True,
+    # agents=[
+    #         job_posting_specialist,
+    #         customer_service_agent,
+    #         sourcing_automation_agent,
+    #         resume_screening_agent,
+    #         interview_coordinator,
+    #         interview_preparation_agent,
+    #         offer_letter_generator,
+    #         ats_manager,
+    #     ]
+    # human_task_crew = Crew(
+    #         agents=agents,
+    #         tasks=[process_pending_tasks_task],
+    #         process=Process.hierarchical,
+    #         verbose=True,
 
-            manager_agent=task_manager,
-            )
-    inputs={
-        "human_task" : message,
-        "context":message_dict
-    }
-    result=human_task_crew.kickoff(inputs=inputs)
-    print(result)
-    return str(result)
+    #         manager_agent=task_manager,
+    #         )
+    # inputs={
+    #     "human_task" : message,
+    #     "context":message_dict
+    # }
+    # result=human_task_crew.kickoff(inputs=inputs)
+    # print(result)
+    # return str(result)
     

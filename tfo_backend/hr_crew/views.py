@@ -41,7 +41,7 @@ def candidate_submission(request, uuid):
     else:
         form = CandidateForm()
 
-    return render(request, 'recruitment\candidate_submission.html', {
+    return render(request, 'recruitment/candidate_submission.html', {
         'form': form,
         'recruitment': recruitment,
         'success': success_message,

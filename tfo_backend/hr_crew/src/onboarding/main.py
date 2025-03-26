@@ -145,18 +145,18 @@ def retry(chat_id):
         onboarding.session.save_message_to_mongo({
                         "Type": "text",
                         "message": f"⚠️ Employee not upload any documents",
-                        "task_name": "TASK STATUS",
+                        "task_name": "STATUS",
                         "user": "AI",
-                        },task_name="TASK STATUS")
+                        },task_name="STATUS")
         return f"⚠️ Employee not upload any documents"
     # Check if documents are verified
     if not employee_document.verified:
         onboarding.session.save_message_to_mongo({
                         "Type": "text",
                         "message": f"⚠️ Document verification pending for {onboarding.employee_name}. Please verify using {settings.SITE_URL}/o/employee-documents/{onboarding.id}/",
-                        "task_name": "TASK STATUS",
+                        "task_name": "STATUS",
                         "user": "AI",
-                        },task_name="TASK STATUS")
+                        },task_name="STATUS")
         return f"⚠️ Document verification pending for {onboarding.employee_name}. Please verify using {settings.SITE_URL}/o/employee-documents/{onboarding.id}/"
     # Create a form dictionary from the onboarding data
     form = {
@@ -259,62 +259,63 @@ def retry(chat_id):
 
 
 def manual(message_id,message):
+    return "Please proceed with form submission"
      
-    agents = [
-        onboarding_team.create_orientation_coordinator(),
-        onboarding_team.create_document_automation_specialist(),
-        onboarding_team.create_welcome_email_specialist(),
-        onboarding_team.create_it_setup_coordinator(),
-        onboarding_team.create_training_development_specialist(),
-        onboarding_team.create_team_integration_facilitator(),
-        onboarding_team.create_policy_compliance_tracker(),
-        onboarding_team.create_final_report_agent(),
-    ]
+    # agents = [
+    #     onboarding_team.create_orientation_coordinator(),
+    #     onboarding_team.create_document_automation_specialist(),
+    #     onboarding_team.create_welcome_email_specialist(),
+    #     onboarding_team.create_it_setup_coordinator(),
+    #     onboarding_team.create_training_development_specialist(),
+    #     onboarding_team.create_team_integration_facilitator(),
+    #     onboarding_team.create_policy_compliance_tracker(),
+    #     onboarding_team.create_final_report_agent(),
+    # ]
 
 
-    messages = list(chat_collection.find({"chat_message_id": str(message_id)}))
-
-    
-
-    # Convert ObjectId to string for readability and structure the data
-    message_dict = {"user": [], "AI": []}
-
-    for msg in messages:
-        try:
-            msg["_id"] = str(msg["_id"])  # Convert ObjectId to string
-            message_dict[msg["user"]].append(msg["message"])  # Append message
-        except KeyError:
-            print(messages)
-
-    print(message_dict)
+    # messages = list(chat_collection.find({"chat_message_id": str(message_id)}))
 
     
 
-    # Add user input to memory
+    # # Convert ObjectId to string for readability and structure the data
+    # message_dict = {"user": [], "AI": []}
+
+    # for msg in messages:
+    #     try:
+    #         msg["_id"] = str(msg["_id"])  # Convert ObjectId to string
+    #         message_dict[msg["user"]].append(msg["message"])  # Append message
+    #     except KeyError:
+    #         print(messages)
+
+    # print(message_dict)
+
+    
+
+    # # Add user input to memory
    
 
-    inputs={
-        "hr_message" : message,
-        "context":message_dict,
-        "chat_id":message_id,
-    }
-    print("inputaaaaaaaa",inputs)
-    crew = Crew(
-        agents=list(agents),
-        tasks=[context_response_task],
-        process=Process.hierarchical,
-        verbose=True,
-        memory=False,  
-        cache=False,  
-        manager_agent=onboarding_team.create_onboarding_manager(), 
+    # inputs={
+    #     "hr_message" : message,
+    #     "context":message_dict,
+    #     "chat_id":message_id,
+    # }
+    # print("inputaaaaaaaa",inputs)
+    # crew = Crew(
+    #     agents=list(agents),
+    #     tasks=[context_response_task],
+    #     process=Process.hierarchical,
+    #     verbose=True,
+    #     memory=False,  
+    #     cache=False,  
+    #     manager_agent=onboarding_team.create_onboarding_manager(), 
     
-    )
+    # )
 
-    response = crew.kickoff(inputs=inputs)
+    # response = crew.kickoff(inputs=inputs)
 
 
-    print("eeee",response)
-    return str(response)
+    # print("eeee",response)
+    # return str(response)
 
     
 #     # Initialize the onboarding team and tasks
