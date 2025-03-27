@@ -111,12 +111,7 @@ async def run(message_id, message: str) -> tuple:
         # Determine action based on classification
         if response.classification == ClassificationResult.AGENT_REQUIRED:
             logging.info(f"Agent required: {response.required_agent}")
-            message_data = {
-              # MongoDB ObjectId
-                "sender": "John Doe",
-             
-            }
-            send_websocket_message(group_id=message_id, message=message_data)
+           
             return process_agent_task(response.required_agent, response.formatted_prompt)
         else:
             logging.info("Query classified as LLM_SUFFICIENT.")

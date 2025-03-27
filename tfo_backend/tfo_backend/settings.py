@@ -17,7 +17,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 import base64
 from cryptography.fernet import Fernet
+from dotenv import load_dotenv
 
+
+dotenv_path = r"C:\Users\alimi\TFO\.env"  # Explicit path
+load_dotenv(dotenv_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -266,3 +270,6 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"  # Convert to boole
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+print(EMAIL_HOST_USER,EMAIL_HOST_PASSWORD,DEFAULT_FROM_EMAIL)
+print("EMAIL_HOST_USER:", os.getenv("EMAIL_HOST_USER"))
+print("EMAIL_HOST_USER from env:", os.getenv("EMAIL_HOST_USER"))

@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -14,6 +15,14 @@ User = get_user_model()
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 @method_decorator(csrf_exempt, name="dispatch")
 class ForgotPasswordView(View):
     def post(self, request):
@@ -36,16 +45,34 @@ class ForgotPasswordView(View):
             # Construct password reset link
             reset_link = f"{settings.SITE_URL}/auth/reset-password/{uidb64}/{token}/"
 
-            # Send email
-            send_mail(
-                subject="Password Reset Request",
-                message=f"Click the link to reset your password: {reset_link}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+            # SMTP Email Configuration
+            smtp_host = os.getenv("EMAIL_HOST", "smtp.gmail.com")  # Default to Gmail SMTP
+            smtp_port = int(os.getenv("EMAIL_PORT", 587))  # Default to 587
+            sender_email = os.getenv("EMAIL_HOST_USER")
+            password = os.getenv("EMAIL_HOST_PASSWORD")
+            recipient_email = email
+            subject = "Password Reset Request"
+            content = f"Click the link to reset your password: {reset_link}"
+            print(sender_email,password)
+            # Send email using the provided SMTP method
+            if not smtp_host or not smtp_port or not sender_email or not password:
+                return JsonResponse({"error": "❌ Incomplete SMTP configuration."}, status=500)
+            try:
+                msg = MIMEMultipart()
+                msg["From"] = sender_email
+                msg["To"] = recipient_email
+                msg["Subject"] = subject
+                msg.attach(MIMEText(content, "plain"))
 
-            return JsonResponse({"message": "Reset link sent to email"}, status=200)
+                with smtplib.SMTP(smtp_host, smtp_port) as server:
+                    server.starttls()
+                    server.login(sender_email, password)
+                    server.send_message(msg)
+
+                return JsonResponse({"message": "Reset link sent to email"}, status=200)
+
+            except Exception as e:
+                return JsonResponse({"error": f"❌ Email sending failed: {e}"}, status=500)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)

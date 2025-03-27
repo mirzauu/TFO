@@ -5,10 +5,11 @@ from email.mime.multipart import MIMEMultipart
 from typing import Optional
 # from crew.models import Document, EmployeeOnboardingTask
 from langchain.tools import tool
+
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL_ADDRESS = "alimirsa123@gmail.com"  # From your Django settings
-EMAIL_PASSWORD = "myxz onbb acaf bnot"
+EMAIL_ADDRESS = "ainypus@gmail.com"  # From your Django settings
+EMAIL_PASSWORD = "cgbg qhlf jwto ahap"
 
 from pydantic import BaseModel, Field
 from typing import Dict, Optional

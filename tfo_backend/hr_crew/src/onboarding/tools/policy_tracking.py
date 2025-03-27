@@ -6,8 +6,8 @@ from email.mime.multipart import MIMEMultipart
 # SMTP Configuration
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL_ADDRESS = "alimirsa123@gmail.com" 
-EMAIL_PASSWORD = "myxz onbb acaf bnot"
+EMAIL_ADDRESS = "ainypus@gmail.com"  # From your Django settings
+EMAIL_PASSWORD = "cgbg qhlf jwto ahap"
 
 @tool
 def policy_email_sender_tool(employee_email: str, policy_details: str) -> str:

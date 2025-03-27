@@ -104,7 +104,7 @@ class MessageConsumer(AsyncWebsocketConsumer):
                 "message": "We are working on it",
                 "user": "AI"
             }))
-            # Wait for 3 seconds
+            # Wait for 3 seconds 
             await asyncio.sleep(3)
 
             # Send follow-up response
