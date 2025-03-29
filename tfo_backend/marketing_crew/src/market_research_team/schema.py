@@ -48,6 +48,7 @@ class TrendSpotterOutput(BaseModel):
 
 class CompetitorStrategy(BaseModel):
     competitor_name: str = Field(..., description="Name of the competitor")
+    competitor_link: str = Field(..., description="website link of the competitor")
     differentiating_strategy: str = Field(..., description="Key strategy used by the competitor")
     market_positioning: Optional[str] = Field(None, description="How the competitor positions itself in the market")
 
