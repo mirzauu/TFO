@@ -174,7 +174,7 @@ DATABASES = {
         'CONN_MAX_AGE': 0,           
     }
 }
-SITE_URL = "http://13.61.220.76"
+SITE_URL = "https://smartteams.nypus.in"
 
 
 REST_FRAMEWORK = {

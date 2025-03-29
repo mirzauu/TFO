@@ -842,7 +842,7 @@ def reload(message_id):
 
 def manual(message_id,message):
 
-    return "Please proceed with form submission"
+    return "Please proceed with the form submission by clicking the 'New Chat' button below"
    # Query MongoDB to find all messages related to the given chat_message_id
     # messages = list(chat_collection.find({"chat_message_id": str(message_id)}))
 

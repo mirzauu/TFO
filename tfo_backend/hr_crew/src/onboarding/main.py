@@ -259,7 +259,7 @@ def retry(chat_id):
 
 
 def manual(message_id,message):
-    return "Please proceed with form submission"
+    return "Please proceed with the form submission by clicking the 'New Chat' button below"
      
     # agents = [
     #     onboarding_team.create_orientation_coordinator(),

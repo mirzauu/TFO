@@ -64,6 +64,7 @@ class JobPostingTool(BaseTool):
             return f"Failed to retrieve access token: {token_response['error']}"
 
         access_token = token_response.get("access_token")
+        print(access_token)
         
         if not access_token:
             return "LinkedIn access token is missing."
