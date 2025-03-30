@@ -97,7 +97,7 @@ class CreateChatMessageSerializer(serializers.ModelSerializer):
 class LinkedInAPIKeySerializer(serializers.ModelSerializer):
     class Meta:
         model = LinkedInAPIKey
-        fields = ['id', 'access_token', 'created_at', 'updated_at']
+        fields = ['id', 'access_token','auth_head', 'created_at', 'updated_at']
 
 class SMTPConfigurationSerializer(serializers.ModelSerializer):
     class Meta:

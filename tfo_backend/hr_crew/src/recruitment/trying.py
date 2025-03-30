@@ -79,6 +79,7 @@ job_posting_specialist = Agent(
 job_posting_specialist_task = Task(
     description=(
         """
+        Apply link :{apply_link}
         Write job descriptions for {job_title} and {job_requirement} at {company_name} in {location} that attract qualified candidates. 
         Ensure they are engaging, accurate, and reflect the requirements of the role.
         To apply for the post, ask them to Apply using the link {apply_link}.

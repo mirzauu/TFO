@@ -34,6 +34,7 @@ class LinkedInAPIKey(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE, related_name='linkedin_api_keys')
     access_token = models.TextField(blank=True, null=True, help_text="OAuth Access Token")
+    auth_head = models.TextField(blank=True, null=True, help_text="author head")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

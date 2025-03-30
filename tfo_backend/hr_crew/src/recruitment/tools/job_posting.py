@@ -24,6 +24,7 @@ def get_linkedin_access_token(chat_message_id):
         # Return LinkedIn access token
         return {
             "access_token": linkedin_api_key.access_token,
+            "author": linkedin_api_key.auth_head,
         }
     except ObjectDoesNotExist:
         return {"error": "LinkedIn access token not found for the given chat message ID"}
@@ -64,6 +65,7 @@ class JobPostingTool(BaseTool):
             return f"Failed to retrieve access token: {token_response['error']}"
 
         access_token = token_response.get("access_token")
+        author = token_response.get("author")
         print(access_token)
         
         if not access_token:
@@ -78,7 +80,7 @@ class JobPostingTool(BaseTool):
         }
 
         payload = {
-            "author": "urn:li:person:F9w0o4A1a0",  # TODO: Replace with a dynamic LinkedIn profile URN
+            "author": f"urn:li:person:{author}",  # TODO: Replace with a dynamic LinkedIn profile URN
             "lifecycleState": "PUBLISHED",
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
