@@ -53,7 +53,7 @@ def run(message_id,message):
     lead_id=lead
     task_name_mapping = {
         "market_research_analyst_task": "Market Research Analyst",
-        "Code_Interpreter_Tool_task": "Code Interpreter Tool",
+  
         "SWOT_analysis_evaluator_task": "SWOT Analysis Evaluator",
         "competitor_analyst_task": "Competitor Analyst",
         "pricing_strategist_task": "Pricing Strategist",
