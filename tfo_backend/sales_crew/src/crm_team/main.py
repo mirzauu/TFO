@@ -41,12 +41,17 @@ def run(message_id,message):
     global lead_id
         
     # Prompt user for key CRM-related inputs
-    company_product = "Apple - iPhone 15"
-    customer_type = "Retail Consumers"
-    interaction_channel = "Social Media"
-    feedback_source = "Google Reviews and Twitter Mentions"
-    purchase_history_depth = "Last 12 months"
-
+    # company_product = "Apple - iPhone 15"
+    # customer_type = "Retail Consumers"
+    # interaction_channel = "Social Media"
+    # feedback_source = "Google Reviews and Twitter Mentions"
+    # purchase_history_depth = "Last 12 months"
+    company_product=message.get("company_product")
+    customer_type=message.get("customer_type")
+    interaction_channel=message.get("interaction_channel")
+    feedback_source=message.get("feedback_source")
+    purchase_history_depth=message.get("purchase_history_depth")
+   
 
     # Format the topic as a clear sentence
     topic = (f"Analyze customer engagement and CRM strategies for {company_product}, "
@@ -56,11 +61,11 @@ def run(message_id,message):
     chat_message = get_object_or_404(ChatMessage, id=message_id)
     lead, created = CustomerRelationshipManagement.objects.update_or_create(
         session=chat_message,  
-        topic=message.get("topic"),
-        customer_segment=message.get("customer_segment"),
-        interaction_history=message.get("interaction_history"),
-        preferred_communication_channel=message.get("preferred_communication_channel"),
-        business_goal=message.get("business_goal"),
+        topic=message.get("company_product"),
+        customer_segment=message.get("customer_type"),
+        interaction_history=message.get("interaction_channel"),
+        preferred_communication_channel=message.get("feedback_source"),
+        business_goal=message.get("purchase_history_depth"),
     )
 
     lead_id=lead

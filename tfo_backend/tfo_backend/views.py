@@ -4,6 +4,7 @@ from django.conf import settings
 
 def serve_image(request, path):
     s3_url =  f"{settings.SITE_URL}/static/assets/{path}"
+    print(s3_url)
     response = requests.get(s3_url)
 
     if response.status_code == 200:
