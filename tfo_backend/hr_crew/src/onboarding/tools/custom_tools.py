@@ -531,7 +531,7 @@ class CreateTrainingPlanTool(BaseTool):
 
 
 class VerifyDocumentSchema(BaseModel):
-    chat_message_id: int = Field(..., description="The ID of the chat message associated with the task.")
+    chat_message_id: int = Field(..., description="The INSTANCE ID associated with the task.")
     employee_name: str
     recipient_email: EmailStr
 
