@@ -78,7 +78,7 @@ class JobPostingTool(BaseTool):
         }
 
         payload = {
-            "author": "urn:li:person:YpUWNYS6u-",  # TODO: Replace with a dynamic LinkedIn profile URN
+            "author": "urn:li:person:F9w0o4A1a0",  # TODO: Replace with a dynamic LinkedIn profile URN
             "lifecycleState": "PUBLISHED",
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
