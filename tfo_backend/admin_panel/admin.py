@@ -7,3 +7,5 @@ class APIKeyAdmin(admin.ModelAdmin):
     list_filter = ("name",)  # Allow filtering by name
 
 admin.site.register(APIKey, APIKeyAdmin)
+
+

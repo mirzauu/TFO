@@ -9,6 +9,11 @@ from django.core.cache import cache
 from django.db import connection
 from hr_crew.models import EmployeeDocuments
 from celery.exceptions import SoftTimeLimitExceeded
+from celery import shared_task
+from django.core.mail import send_mail
+from .models import EODReport, EODReportConfiguration
+from django.utils.timezone import now
+
 
 @shared_task(bind=True)
 def process_retry_task(self, message_id):
@@ -91,3 +96,35 @@ def process_chat_task(self, message_id, message):
     )
 
     return response_data
+
+
+@shared_task
+def send_eod_report():
+    """
+    Task to send the EOD report emails to organizations that have enabled it.
+    """
+    today = now().date()
+
+    for config in EODReportConfiguration.objects.filter(enable=True):
+        if config.email_address:
+            eod_report = EODReport.objects.filter(organization=config.organization, date=today).first()
+
+            if eod_report:
+                # Format Agent Usage Details properly
+                agent_usage_details = "\n".join([f"  - {key}: {value}" for key, value in eod_report.agent_usage.items()]) or "  - No data"
+
+                subject = f"EOD Report for {config.organization.name} - {today}"
+                message = f"""
+                        End of Day Report for {config.organization.name} ({today})
+
+                        Total Logins: {eod_report.total_logins}
+                        Total Chat Sessions: {eod_report.total_chat_sessions}
+                        Total Messages: {eod_report.total_messages}
+                        Total AI Agents Used: {eod_report.total_agents_used}
+
+                        Agent Usage Details:
+                        {agent_usage_details}
+                        """
+                send_mail(subject, message, 'ainypus@gmail.com', [config.email_address])
+
+    return "EOD Reports Sent Successfully"

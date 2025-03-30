@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Organization, OrganizationStaff, Package, OrganizationSubscription,AIAgent,AgentChatSession,ChatMessage,UserLoginLog,EODReport,TicketIssue
+from .models import Organization, OrganizationStaff, Package, OrganizationSubscription,AIAgent,AgentChatSession,ChatMessage,UserLoginLog,EODReport,TicketIssue,EODReportConfiguration
 # Register your models here.
 admin.site.register(Organization)
 admin.site.register(OrganizationStaff)
@@ -12,5 +12,6 @@ admin.site.register(AgentChatSession)
 admin.site.register(ChatMessage)
 admin.site.register(UserLoginLog)
 admin.site.register(EODReport)
+admin.site.register(EODReportConfiguration)
 admin.site.register(TicketIssue)
 
