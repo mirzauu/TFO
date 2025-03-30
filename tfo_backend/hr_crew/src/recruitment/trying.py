@@ -799,15 +799,31 @@ def reload(message_id):
     
     # Fetch all RecruitmentTasks associated with this Recruitment where status is "PENDING"
     pending_tasks = RecruitmentTask.objects.filter(
-        recruitment=recruitment, 
-        status="PENDING"
+    recruitment=recruitment, 
+    status="PENDING"
     ).order_by("id")
-    # Create a list of original task names (reverse lookup using task_name_mapping_reverse)
+
+    # Convert to a dictionary mapping task names to objects
+    pending_tasks_dict = {task.task_name: task for task in pending_tasks}
+
+    # Define the task dependencies
+    exclude_tasks = set()
+
+    # Step 1: If "Candidate Outreach" is pending, exclude "Interview Coordinator" and "Offer Letter Generator"
+    if "Candidate Outreach" in pending_tasks_dict:
+        exclude_tasks.update(["Interview Coordinator", "Offer Letter Generator"])
+
+    # Step 2: If "Interview Coordinator" is pending, exclude "Offer Letter Generator"
+    elif "Interview Coordinator" in pending_tasks_dict:
+        exclude_tasks.add("Offer Letter Generator")
+
+    # Step 3: Filter the pending tasks list based on the exclude_tasks set
     pendingtask_list = [
         task_name_mapping_reverse[task.task_name] 
-        for task in pending_tasks if task.task_name in task_name_mapping_reverse
+        for task in pending_tasks 
+        if task.task_name in task_name_mapping_reverse and task.task_name not in exclude_tasks
     ]
-    print("pending",pendingtask_list)
+
 
     update_chat_id(id=recruitment.id)
     # Define the crew with the pending tasks
