@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from .helpers import OrganizationToken
 from rest_framework.permissions import IsAuthenticated
-from .models import TicketIssue,OrganizationStaff,AgentChatSession,AIAgent,ChatMessage,Organization, LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,EODReport
+from .models import TicketIssue,OrganizationStaff,AgentChatSession,AIAgent,ChatMessage,Organization, LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,EODReport,UserLoginLog
 from .serializers import OrganizationDetailsSerializer,AgentChatSessionSerializer,ChatMessageSerializer,CreateChatMessageSerializer,ChatMessageIDSerializer,LinkedInAPIKeySerializer, SMTPConfigurationSerializer, EODReportConfigurationSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
@@ -16,6 +16,8 @@ from django.db.models import F
 import csv
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.signals import user_logged_out
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import AllowAny
 
 class OrganizationLoginView(APIView):
     """
@@ -361,3 +363,46 @@ class RaiseTicketView(APIView):
             "username": username,
             "organization": organization_name
         }, status=status.HTTP_201_CREATED)           
+    
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def company_a_data(request):
+    # Get Company A
+    company_a = get_object_or_404(Organization, name="companyA")
+
+    # Get login details
+    logins = UserLoginLog.objects.filter(organization=company_a).values(
+        "user__username", "timestamp", "ip_address", "user_agent"
+    )
+
+    # Get agent usage
+    sessions = AgentChatSession.objects.filter(organization=company_a)
+    agent_usage = {}
+    for session in sessions:
+        agent_name = session.agent.name
+        if agent_name not in agent_usage:
+            agent_usage[agent_name] = 0
+        agent_usage[agent_name] += 1
+
+    # Get messages grouped by date
+    messages = ChatMessage.objects.filter(session__organization=company_a).order_by("created_at")
+    messages_by_date = {}
+    for message in messages:
+        date_str = message.created_at.date().isoformat()
+        if date_str not in messages_by_date:
+            messages_by_date[date_str] = []
+        messages_by_date[date_str].append({
+            "user": message.user.username,
+            "session_id": message.session.id,
+            "created_at": message.created_at.isoformat(),
+        })
+
+    # Prepare response
+    data = {
+        "company": company_a.name,
+        "logins": list(logins),
+        "agent_usage": agent_usage,
+        "messages_by_date": messages_by_date
+    }
+    return Response(data)    
