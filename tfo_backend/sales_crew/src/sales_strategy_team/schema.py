@@ -3,7 +3,6 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 
 
-
 class MarketTrend(BaseModel):
     trend: str = Field(..., description="Description of the market trend")
     impact: str = Field(..., description="Potential impact on the industry or business")
@@ -15,10 +14,8 @@ class MarketAnalystDetails(BaseModel):
     data_sources: Optional[List[str]] = Field(default_factory=list, description="Sources of the market analysis")
 
 class MarketAnalystOutput(BaseModel):
-    response: str = Field(..., description="Status message for market analysis")
+    response: str = Field(..., description="Market Analysis Task Completed: Detailed industry trends identified and assessed for business impact.")
     details: MarketAnalystDetails = Field(..., description="Detailed market trends analysis")
-
-
 
 class SWOTFactor(BaseModel):
     name: str = Field(..., description="Name of the SWOT factor")
@@ -33,11 +30,9 @@ class SWOTDetails(BaseModel):
     strategic_insights: str = Field(..., description="Overall SWOT insights and recommendations")
 
 class SWOTAnalysisOutput(BaseModel):
-    response: str = Field(..., description="Status message for SWOT analysis")
+    response: str = Field(..., description="SWOT Analysis Completed: Strengths, weaknesses, opportunities, and threats comprehensively evaluated.")
     details: SWOTDetails = Field(..., description="Comprehensive SWOT breakdown")
 
-
-# 🏢 Competitor Analysis
 class CompetitorStrategy(BaseModel):
     competitor_name: str = Field(..., description="Name of the competitor")
     differentiating_strategy: str = Field(..., description="Key strategy used by the competitor")
@@ -49,11 +44,9 @@ class CompetitorAnalysisDetails(BaseModel):
     risk_factors: Optional[List[str]] = Field(default_factory=list, description="Potential risks in competing strategies")
 
 class CompetitorAnalysisOutput(BaseModel):
-    response: str = Field(..., description="Status message for competitor analysis")
+    response: str = Field(..., description="Competitor Analysis Completed: Rival strategies reviewed, with actionable insights and risk evaluation.")
     details: CompetitorAnalysisDetails = Field(..., description="Detailed competitor analysis insights")
 
-
-# 💰 Pricing Strategy
 class PricingFactor(BaseModel):
     factor: str = Field(..., description="A key element influencing pricing decisions")
     influence: str = Field(..., description="How this factor impacts pricing strategies")
@@ -66,11 +59,9 @@ class PricingModelDetails(BaseModel):
     profitability_forecast: Optional[str] = Field(None, description="Estimated profitability impact of this model")
 
 class PricingModelOutput(BaseModel):
-    response: str = Field(..., description="Status message for pricing model generation")
+    response: str = Field(..., description="Pricing Strategy Analysis Completed: Key pricing factors examined and strategy formulated for maximum profitability.")
     details: PricingModelDetails = Field(..., description="Comprehensive pricing strategy analysis")
 
-
-# 🎤 Sales Pitch
 class SalesPitchPoint(BaseModel):
     point: str = Field(..., description="A key persuasion point used in the pitch")
     supporting_evidence: Optional[str] = Field(None, description="Evidence or rationale supporting this point")
@@ -83,7 +74,5 @@ class SalesPitchDetails(BaseModel):
     estimated_conversion_rate: Optional[float] = Field(None, description="Predicted conversion rate impact (0-1)")
 
 class SalesPitchOutput(BaseModel):
-    response: str = Field(..., description="Status message for sales pitch creation")
+    response: str = Field(..., description="Sales Pitch Creation Completed: Target audience identified and persuasive content structured for maximum impact.")
     details: SalesPitchDetails = Field(..., description="Detailed sales pitch breakdown")
-
-    
