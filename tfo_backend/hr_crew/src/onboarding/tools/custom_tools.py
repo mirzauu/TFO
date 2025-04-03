@@ -21,7 +21,7 @@ from django.conf import settings
 from typing import Dict
 from django.shortcuts import get_object_or_404
 from django.http import HttpRequest
-from organizations.models import Organization,OrganizationStaff,SMTPConfiguration,ChatMessage
+from organizations.models import Organization,OrganizationStaff,SMTPConfiguration,ChatMessage,PolicySetup,ITSetup
 from django.core.exceptions import ObjectDoesNotExist
 
 def get_smtp_details(chat_message_id):
@@ -285,7 +285,144 @@ class SendEmailTool(BaseTool):
         except Exception as e:
             return f"❌ Error sending email: {str(e)}"
         
+def get_it_setup_details(chat_message_id):
+    """
+    Fetches IT setup details (Google Drive link and instructions) based on chat_message_id.
+    """
+    print("Fetching IT setup details for chat:", chat_message_id)
+    try:
+        chat_message = ChatMessage.objects.get(id=chat_message_id)
+        organization = chat_message.session.organization
+        it_setup = ITSetup.objects.get(organization=organization)
 
+        return {
+            "google_drive_link": it_setup.google_drive_link,
+            "instructions": it_setup.instructions,
+        }
+    except ObjectDoesNotExist:
+        return {"error": "IT setup details not found for the given chat message ID"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
+def get_policy_setup_details(chat_message_id):
+    """
+    Fetches policy setup details based on chat_message_id.
+    """
+    print("Fetching policy setup details for chat:", chat_message_id)
+    try:
+        chat_message = ChatMessage.objects.get(id=chat_message_id)
+        organization = chat_message.session.organization
+        policy_setup = PolicySetup.objects.get(organization=organization)
+        
+        return {
+            "policy_name": policy_setup.name,
+            "policy_description": policy_setup.description,
+            "created_at": policy_setup.created_at,
+            "updated_at": policy_setup.updated_at,
+        }
+    except ObjectDoesNotExist:
+        return {"error": "Policy setup details not found for the given chat message ID"}
+    except Exception as e:
+        return {"error": str(e)}
+
+class SendPolicyEmailTool(BaseTool):
+    name: str = "send_policy_email_tool"
+    description: str = "Sends an email to an employee with policy details attached."
+    args_schema: Type[BaseModel] = EmailSchema
+
+    def _run(self, employee_name: str, recipient_email: str, subject: str, content: str, chat_message_id: int) -> str:
+        try:
+            smtp_details = get_smtp_details(chat_message_id)
+            policy_details = get_policy_setup_details(chat_message_id)
+
+            if "error" in smtp_details:
+                return f"❌ Error: {smtp_details['error']}"
+            if "error" in policy_details:
+                return f"❌ Error: {policy_details['error']}"
+
+            smtp_host = smtp_details["smtp_host"]
+            smtp_port = smtp_details["smtp_port"]
+            sender_email = smtp_details["sender_email"]
+            password = smtp_details["password"]
+
+            if not smtp_host or not smtp_port or not sender_email or not password:
+                return "❌ Error: Incomplete SMTP configuration."
+
+            # Prepare email with policy details
+            msg = MIMEMultipart()
+            msg['From'] = sender_email
+            msg['To'] = recipient_email
+            msg['Subject'] = subject
+
+            email_body = f"{content}\n\nPolicy Details:\n{policy_details}"
+            msg.attach(MIMEText(email_body, 'plain'))
+
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
+                server.starttls()
+                server.login(sender_email, password)
+                server.send_message(msg)
+
+            return f"✅ Policy details email sent to {employee_name} at {recipient_email}"
+
+        except Exception as e:
+            return f"❌ Error sending policy email: {str(e)}"
+
+
+class SendSetupEmailTool(BaseTool):
+    name: str = "send_setup_email_tool"
+    description: str = "Sends an email to an employee with IT setup instructions and Google Drive link."
+    args_schema: Type[BaseModel] = EmailSchema
+
+    def _run(self, employee_name: str, recipient_email: str, subject: str, content: str, chat_message_id: int) -> str:
+        try:
+            smtp_details = get_smtp_details(chat_message_id)
+            it_setup_details = get_it_setup_details(chat_message_id)
+
+            if "error" in smtp_details:
+                return f"❌ Error: {smtp_details['error']}"
+            if "error" in it_setup_details:
+                return f"❌ Error: {it_setup_details['error']}"
+
+            smtp_host = smtp_details["smtp_host"]
+            smtp_port = smtp_details["smtp_port"]
+            sender_email = smtp_details["sender_email"]
+            password = smtp_details["password"]
+
+            if not smtp_host or not smtp_port or not sender_email or not password:
+                return "❌ Error: Incomplete SMTP configuration."
+
+            # Prepare email with IT setup details
+            msg = MIMEMultipart()
+            msg['From'] = sender_email
+            msg['To'] = recipient_email
+            msg['Subject'] = subject
+
+            email_body = f"""{content}
+
+🔹 **IT Setup Instructions:**  
+{it_setup_details['instructions']}
+
+🔹 **Google Drive Link for Resources:**  
+{it_setup_details['google_drive_link']}
+
+Please follow the instructions carefully. If you need further assistance, contact the IT support team.
+
+Best regards,  
+IT Support Team
+"""
+            msg.attach(MIMEText(email_body, 'plain'))
+
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
+                server.starttls()
+                server.login(sender_email, password)
+                server.send_message(msg)
+
+            return f"✅ IT setup email sent to {employee_name} at {recipient_email}"
+
+        except Exception as e:
+            return f"❌ Error sending IT setup email: {str(e)}"
 
 
 class SerperDevToolSchema(BaseModel):

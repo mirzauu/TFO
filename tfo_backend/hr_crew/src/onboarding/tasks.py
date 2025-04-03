@@ -14,7 +14,7 @@ from pydantic import BaseModel,Field
 from typing import Dict
 from pydantic import BaseModel
 from langchain.tools import tool
-from hr_crew.src.onboarding.tools.custom_tools import TaskStatusUpdate,SendEmailTool,CreateOnboardingPlanTool,CreateTrainingPlanTool,VerifyDocumentTool,VerifyUploadedDocumentTool
+from hr_crew.src.onboarding.tools.custom_tools import TaskStatusUpdate,SendEmailTool,CreateOnboardingPlanTool,CreateTrainingPlanTool,VerifyDocumentTool,VerifyUploadedDocumentTool,SendPolicyEmailTool,SendSetupEmailTool
 
 class DocumentAutomation(BaseModel):
     has_link_generated: Optional[bool] = Field(None, description="True if the link is generated.")
@@ -410,11 +410,8 @@ class OnboardingTasks:
 
             **Steps**:
             1. Draft an email to {newhireinfo.get('email', 'N/A')} with the subject **"Software Installation Instructions: Lark"**.
-            2. Include a brief introduction explaining the purpose of the email.
-            3. Attach the **software installation file** (Lark.apk) from www.googledrive.com.
-            4. Provide a **step-by-step installation guide** for Lark.
-            6. Send an email containing the draft to {newhireinfo.get('email', 'N/A')} using "SendEmailTool".
-            7. update the task status using "TaskStatusUpdate"
+            2. Send an email containing the draft to {newhireinfo.get('email', 'N/A')} using "SendSetupEmailTool".
+            3. update the task status using "TaskStatusUpdate"
 
             **Task Completion Requirement**:
             - If the email is successfully sent, update the task status to **COMPLETED** using `TaskStatusUpdate`.
@@ -434,7 +431,7 @@ class OnboardingTasks:
             description=task_description,
             agent=self.create_it_setup_coordinator, 
             expected_output=expected_output,
-            tools=[SendEmailTool(),TaskStatusUpdate()],
+            tools=[SendSetupEmailTool(),TaskStatusUpdate()],
             callback=lambda result: self.update_task_status(result, task_name="Software Installation Task", id=newhireinfo.get('id', 'N/A')),
         )
 
@@ -474,7 +471,7 @@ class OnboardingTasks:
             - Employee ID: {newhireinfo.get('employee_id', 'N/A')}
 
             **Steps**:
-            1. Send an email containing company policies to {newhireinfo.get('email', 'N/A')} using "SendEmailTool".
+            1. Send an email containing company policies to {newhireinfo.get('email', 'N/A')} using "SendPolicyEmailTool".
             2. update the task status using "TaskStatusUpdate"
            
             
@@ -495,7 +492,7 @@ class OnboardingTasks:
             description=task_description,
             agent=self.create_policy_compliance_tracker,
             expected_output=expected_output,
-            tools=[SendEmailTool(),TaskStatusUpdate()],
+            tools=[SendPolicyEmailTool(),TaskStatusUpdate()],
             callback=lambda result: self.update_task_status(result, task_name="Policy Compliance Task", id=newhireinfo.get('id', 'N/A')),
         )
 

@@ -27,6 +27,36 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+
+class ITSetup(models.Model):
+    """
+    Model for storing IT setup information for an organization.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization = models.OneToOneField(Organization, on_delete=models.CASCADE, related_name="it_setup")
+    google_drive_link = models.URLField(max_length=500, help_text="Google Drive link for IT resources")
+    instructions = models.TextField(help_text="IT setup instructions")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.organization.name} - IT Setup"
+
+
+class PolicySetup(models.Model):
+    """
+    Model for storing policy-related documents and instructions for an organization.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization = models.OneToOneField(Organization, on_delete=models.CASCADE, related_name="policy_setup")
+    document = models.FileField(upload_to="policies/", help_text="Upload policy document")
+    instructions = models.TextField(help_text="Policy setup instructions")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.organization.name} - Policy Setup"
+    
 class LinkedInAPIKey(models.Model):
     """
     Model for storing LinkedIn API keys associated with an organization.
@@ -77,6 +107,15 @@ def create_default_configs(sender, instance, created, **kwargs):
         LinkedInAPIKey.objects.create(organization=instance)
         SMTPConfiguration.objects.create(organization=instance)
         EODReportConfiguration.objects.create(organization=instance)
+        ITSetup.objects.create(
+            organization=instance,
+            google_drive_link="https://drive.google.com/",  # Default placeholder
+            instructions="Please update IT setup instructions."
+        )
+        PolicySetup.objects.create(
+            organization=instance,
+            instructions="Please upload policy documents and update instructions."
+        )
 
 
 class OrganizationStaff(models.Model):
