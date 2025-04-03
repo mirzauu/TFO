@@ -6,4 +6,3 @@ db = client["tfo"]  # Your MongoDB database
 chat_collection = db["chat"]  # Collection for chat messages
 
 
-print(db,chat_collection)
