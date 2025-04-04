@@ -3,9 +3,9 @@ market_analyst_task:
     Generate comprehensive reports analyzing current market trends. 
     Topic: {topic}
   expected_output: >
-    A valid JSON object matching the MarketAnalystOutput schema, which includes a textual summary of the market trends
-    and a structured breakdown in the 'details' field covering: industry sector, a list of trends (with description,
-    impact, and optional confidence level), and any data sources referenced.
+    A valid JSON object matching the MarketAnalystOutput schema. The 'response' field must summarize key market trends identified,
+    their relevance to the {topic}, and their projected impact on the industry. The 'details' field must include: industry sector analyzed,
+    list of trends with description, impact, and confidence level, plus the data sources used.
   agent: market_analyst
 
 swot_analyst_task:
@@ -13,9 +13,9 @@ swot_analyst_task:
     Perform a SWOT analysis on current and upcoming sales campaigns. 
     Topic: {topic}
   expected_output: >
-    A valid JSON object matching the SWOTAnalysisOutput schema, including an overall response summary and a 'details'
-    field containing strengths, weaknesses, opportunities, threats (each with name, description, and optional implications),
-    and strategic insights.
+    A valid JSON object matching the SWOTAnalysisOutput schema. The 'response' field must summarize the most important insight
+    from the SWOT analysis for the {topic}, such as key opportunity or critical threat. The 'details' must include a full breakdown
+    of strengths, weaknesses, opportunities, threats, and the strategic insight derived.
   agent: swot_analyst
 
 competitor_analyst_task:
@@ -24,9 +24,9 @@ competitor_analyst_task:
     and key differentiators. 
     Topic: {topic}
   expected_output: >
-    A valid JSON object following the CompetitorAnalysisOutput schema, containing a response summary and 'details' section
-    with a list of competitors (including name, strategy, optional market positioning), actionable strategic recommendations,
-    and any identified risk factors.
+    A valid JSON object conforming to the CompetitorAnalysisOutput schema. The 'response' must summarize competitive threats or
+    opportunities uncovered relevant to the competitor_analyst_task, including key strategies observed. The 'details' must include competitor names,
+    strategies, market positioning, recommendations, and risk factors.
   agent: competitor_analyst
 
 pricing_strategist_task:
@@ -35,9 +35,9 @@ pricing_strategist_task:
     and competitor pricing trends. 
     Topic: {topic}
   expected_output: >
-    A valid JSON object conforming to the PricingModelOutput schema, including a response summary and a 'details' section
-    describing the pricing model, key influencing factors (with descriptions and optional data sources), strategy, and an
-    optional profitability forecast.
+    A valid JSON object matching the PricingModelOutput schema. The 'response' must clearly describe the pricing strategy recommended
+    for pricing_strategist_task and why it's suitable based on the analysis. The 'details' must include model description, pricing factors, data sources,
+    and profitability forecast if available.
   agent: pricing_strategist
 
 sales_pitch_specialist_task:
@@ -45,7 +45,7 @@ sales_pitch_specialist_task:
     Draft personalized sales pitches emphasizing key differentiators and value propositions. 
     Topic: {topic}
   expected_output: >
-    A valid JSON object adhering to the SalesPitchOutput schema, including a general response and a 'details' section
-    that defines the target demographic, full pitch content, key persuasion points (with optional evidence), a call to action,
-    and an optional estimated conversion rate.
+    A valid JSON object conforming to the SalesPitchOutput schema. The 'response' must summarize the intent and approach of the pitch
+    crafted for sales_pitch_specialist_task, including its appeal to the target demographic. The 'details' must include pitch content, persuasion points,
+    audience profile, call to action, and estimated conversion rate if available.
   agent: sales_pitch_specialist
