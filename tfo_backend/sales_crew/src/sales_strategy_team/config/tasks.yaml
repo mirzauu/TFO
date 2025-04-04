@@ -1,10 +1,11 @@
-      
 market_analyst_task:
   description: >
     Generate comprehensive reports analyzing current market trends. 
     Topic: {topic}
   expected_output: >
-    Detailed report on market trends with visual data.
+    A valid JSON object matching the MarketAnalystOutput schema, which includes a textual summary of the market trends
+    and a structured breakdown in the 'details' field covering: industry sector, a list of trends (with description,
+    impact, and optional confidence level), and any data sources referenced.
   agent: market_analyst
 
 swot_analyst_task:
@@ -12,7 +13,9 @@ swot_analyst_task:
     Perform a SWOT analysis on current and upcoming sales campaigns. 
     Topic: {topic}
   expected_output: >
-    SWOT analysis report highlighting key insights
+    A valid JSON object matching the SWOTAnalysisOutput schema, including an overall response summary and a 'details'
+    field containing strengths, weaknesses, opportunities, threats (each with name, description, and optional implications),
+    and strategic insights.
   agent: swot_analyst
 
 competitor_analyst_task:
@@ -21,7 +24,9 @@ competitor_analyst_task:
     and key differentiators. 
     Topic: {topic}
   expected_output: >
-    Competitor analysis report with strategic recommendations.
+    A valid JSON object following the CompetitorAnalysisOutput schema, containing a response summary and 'details' section
+    with a list of competitors (including name, strategy, optional market positioning), actionable strategic recommendations,
+    and any identified risk factors.
   agent: competitor_analyst
 
 pricing_strategist_task:
@@ -30,7 +35,9 @@ pricing_strategist_task:
     and competitor pricing trends. 
     Topic: {topic}
   expected_output: >
-    Dynamic pricing model documentation.
+    A valid JSON object conforming to the PricingModelOutput schema, including a response summary and a 'details' section
+    describing the pricing model, key influencing factors (with descriptions and optional data sources), strategy, and an
+    optional profitability forecast.
   agent: pricing_strategist
 
 sales_pitch_specialist_task:
@@ -38,7 +45,7 @@ sales_pitch_specialist_task:
     Draft personalized sales pitches emphasizing key differentiators and value propositions. 
     Topic: {topic}
   expected_output: >
-    Customized sales pitch documents for various demographics.
+    A valid JSON object adhering to the SalesPitchOutput schema, including a general response and a 'details' section
+    that defines the target demographic, full pitch content, key persuasion points (with optional evidence), a call to action,
+    and an optional estimated conversion rate.
   agent: sales_pitch_specialist
-
-    
