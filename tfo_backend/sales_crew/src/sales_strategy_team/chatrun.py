@@ -49,7 +49,7 @@ def process_agent_task(agent_type: AgentType, formatted_prompt: str) -> tuple:
         AgentType.SWOT_ANALYST_TASK: "swot_analyst_task",
         AgentType.COMPTETITOR_ANALYST_TASK: "competitor_analyst_task",
         AgentType.PRICING_STRATEGIST_TASK: "pricing_strategist_task",
-        AgentType.SALES_PITCH_SPECIALIST_TASK: "sales_pitch_specialist_task",
+        AgentType.SALES_PITCH_SPECIALIST_TASK: "tailored_sales_pitch_specialist_task",
     }
 
  
