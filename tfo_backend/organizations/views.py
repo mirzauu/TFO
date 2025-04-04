@@ -4,8 +4,8 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from .helpers import OrganizationToken
 from rest_framework.permissions import IsAuthenticated
-from .models import TicketIssue,OrganizationStaff,AgentChatSession,AIAgent,ChatMessage,Organization, LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,EODReport,UserLoginLog
-from .serializers import OrganizationDetailsSerializer,AgentChatSessionSerializer,ChatMessageSerializer,CreateChatMessageSerializer,ChatMessageIDSerializer,LinkedInAPIKeySerializer, SMTPConfigurationSerializer, EODReportConfigurationSerializer
+from .models import TicketIssue,OrganizationStaff,AgentChatSession,AIAgent,ChatMessage,Organization, LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,EODReport,UserLoginLog,ITSetup, PolicySetup
+from .serializers import OrganizationDetailsSerializer,AgentChatSessionSerializer,ChatMessageSerializer,CreateChatMessageSerializer,ChatMessageIDSerializer,LinkedInAPIKeySerializer, SMTPConfigurationSerializer, EODReportConfigurationSerializer,ITSetupSerializer, PolicySetupSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from django.contrib.auth import authenticate, login
@@ -406,3 +406,59 @@ def company_a_data(request):
         "messages_by_date": messages_by_date
     }
     return Response(data)    
+
+
+class OrgSetupAPIView(APIView):
+    """
+    API to retrieve and update IT Setup and Policy Setup for an organization.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        staff = get_object_or_404(OrganizationStaff, user=user)
+        organization = staff.organization
+
+        if user.role.name == "organization_staff":
+            return Response([], status=status.HTTP_200_OK)
+
+        it_setup = ITSetup.objects.filter(organization=organization).first()
+        policy_setup = PolicySetup.objects.filter(organization=organization).first()
+
+        data = {
+            "it_setup": ITSetupSerializer(it_setup).data if it_setup else None,
+            "policy_setup": PolicySetupSerializer(policy_setup).data if policy_setup else None,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        """
+        Update IT Setup and Policy Setup for an organization.
+        """
+        user = request.user
+
+        staff = get_object_or_404(OrganizationStaff, user=user)
+        organization = staff.organization
+
+        if user.role.name == "organization_staff":
+            return Response({"error": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
+
+        it_setup = ITSetup.objects.filter(organization=organization).first()
+        policy_setup = PolicySetup.objects.filter(organization=organization).first()
+
+        it_serializer = ITSetupSerializer(it_setup, data=request.data.get("it_setup", {}), partial=True)
+        policy_serializer = PolicySetupSerializer(policy_setup, data=request.data.get("policy_setup", {}), partial=True)
+
+        if it_serializer.is_valid() and policy_serializer.is_valid():
+            it_serializer.save()
+            policy_serializer.save()
+            return Response({
+                "it_setup": it_serializer.data,
+                "policy_setup": policy_serializer.data,
+            }, status=status.HTTP_200_OK)
+
+        return Response({
+            "it_setup_errors": it_serializer.errors,
+            "policy_setup_errors": policy_serializer.errors,
+        }, status=status.HTTP_400_BAD_REQUEST)

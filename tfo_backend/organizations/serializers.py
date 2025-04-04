@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Organization, OrganizationSubscription,AgentChatSession, ChatMessage, AIAgent,LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,OrganizationStaff
+from .models import Organization, OrganizationSubscription,AgentChatSession, ChatMessage, AIAgent,LinkedInAPIKey, SMTPConfiguration, EODReportConfiguration,OrganizationStaff,ITSetup,PolicySetup
 from organizations.models import Package
 
 class PackageSerializer(serializers.ModelSerializer):
@@ -108,3 +108,15 @@ class EODReportConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EODReportConfiguration
         fields = ['id', 'email_address', 'enable', 'created_at', 'updated_at']    
+
+class ITSetupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ITSetup
+        fields = '__all__'
+        read_only_fields = ['id', 'organization', 'created_at', 'updated_at']
+
+class PolicySetupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PolicySetup
+        fields = '__all__'
+        read_only_fields = ['id', 'organization', 'created_at', 'updated_at']        
