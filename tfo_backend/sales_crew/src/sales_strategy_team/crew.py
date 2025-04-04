@@ -23,6 +23,7 @@ class SalesStrategyTeam():
 			config=self.agents_config['market_analyst'],
 			verbose=True,
 			tools=[SerperDevTool()],
+			allow_delegation=False
 		)
 	
 
@@ -31,7 +32,8 @@ class SalesStrategyTeam():
 		return Agent(
 			config=self.agents_config['swot_analyst'],
 			verbose=True,
-			tools=[SerperDevTool()]
+			tools=[SerperDevTool()],
+			allow_delegation=False
 		)
 	
 	@agent
@@ -39,7 +41,8 @@ class SalesStrategyTeam():
 		return Agent(
 			config=self.agents_config['competitor_analyst'],
 			verbose=True,
-			tools=[SerperDevTool()]
+			tools=[SerperDevTool()],
+			allow_delegation=False
 		)
 	
 	@agent
@@ -47,7 +50,8 @@ class SalesStrategyTeam():
 		return Agent(
 			config=self.agents_config['pricing_strategist'],
 			verbose=True,
-			tools=[SerperDevTool()]
+			tools=[SerperDevTool()],
+			allow_delegation=False
 		)
 	
 	@agent
@@ -55,7 +59,8 @@ class SalesStrategyTeam():
 		return Agent(
 			config=self.agents_config['sales_pitch_specialist'],
 			verbose=True,
-			tools=[SerperDevTool()]
+			tools=[SerperDevTool()],
+			allow_delegation=False
 		)
 
 
