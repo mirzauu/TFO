@@ -10,9 +10,7 @@ admin.site.register(OrganizationSubscription)
 admin.site.register(AIAgent)
 admin.site.register(AgentChatSession)
 admin.site.register(ChatMessage)
-admin.site.register(UserLoginLog)
 admin.site.register(EODReport)
 admin.site.register(TicketIssue)
-admin.site.register(ITSetup)
-admin.site.register(PolicySetup)
+
 

@@ -19,7 +19,8 @@ class ContentCreationTeam():
 		return Agent(
 			config=self.agents_config['sales_brochure_specialist'],
 			verbose=True,
-			tools=[SerperDevTool(),TaskStatusUpdate()]
+			tools=[SerperDevTool(),TaskStatusUpdate()],
+			allow_delegation=False
 		)
 
 	@agent
@@ -27,7 +28,8 @@ class ContentCreationTeam():
 		return Agent(
 			config=self.agents_config['email_template_creator'],
 			verbose=True,
-			tools=[SerperDevTool(),TaskStatusUpdate()]
+			tools=[SerperDevTool(),TaskStatusUpdate()],
+			allow_delegation=False
 		)
 	
 	@agent
@@ -35,7 +37,8 @@ class ContentCreationTeam():
 		return Agent(
 			config=self.agents_config['product_description_writer'],
 			verbose=True,
-			tools=[SerperDevTool(),TaskStatusUpdate()]
+			tools=[SerperDevTool(),TaskStatusUpdate()],
+			allow_delegation=False
 		)
 	
 	@agent
@@ -43,7 +46,8 @@ class ContentCreationTeam():
 		return Agent(
 			config=self.agents_config['presentation_designer'],
 			verbose=True,
-			tools=[SerperDevTool(),TaskStatusUpdate()]
+			tools=[SerperDevTool(),TaskStatusUpdate()],
+			allow_delegation=False
 		)
 	
 	@agent
@@ -51,7 +55,8 @@ class ContentCreationTeam():
 		return Agent(
 			config=self.agents_config['social_media_content_creator'],
 			verbose=True,
-			tools=[SerperDevTool(),TaskStatusUpdate()]
+			tools=[SerperDevTool(),TaskStatusUpdate()],
+			allow_delegation=False
 		)
 
 	@task
@@ -60,6 +65,7 @@ class ContentCreationTeam():
 			config=self.tasks_config['sales_brochure_specialist_task'],
 			output_json=SalesBrochure,
 			callback=lambda result: main.task_callback(result=result, task_name="Sales Brochure Specialist",formate="brochure"),
+			
 
 		)
 
@@ -109,6 +115,7 @@ class ContentCreationTeam():
 			tasks=self.tasks, # Automatically created by the @task decorator
 			verbose=True,
 			process=Process.sequential, 
+			
 		)
 # Agent: Sales Pitch Specialist
 ## Final Answer:

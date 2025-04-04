@@ -26,7 +26,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['review_analyst'],
 			tools=[SerperDevTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 
 	@agent
@@ -34,7 +35,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['survey_designer'],
 			verbose=True,
-			tools=[]
+			tools=[],
+			allow_delegation=False
 		)
 	
 	@agent
@@ -42,7 +44,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['trend_spotter'],
 			tools=[SerperDevTool(),ScrapeWebsiteTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 
 	@agent
@@ -50,7 +53,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['competitor_analyst'],
 			tools=[SerperDevTool(),ScrapeWebsiteTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 
 	@agent
@@ -58,7 +62,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['demographic_specialist'],
 			tools=[SerperDevTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 	
 	@agent
@@ -66,7 +71,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['persona_creator'],
 			tools=[SerperDevTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 	
 	@agent
@@ -74,7 +80,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['geo_market_analyst'],
 			tools=[SerperDevTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 
 	@agent
@@ -82,7 +89,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['sentiment_analyst'],
 			tools=[SerperDevTool(),ScrapeWebsiteTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 	
 	@agent
@@ -90,7 +98,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['gap_analyst'],
 			tools=[SerperDevTool(),ScrapeWebsiteTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 	
 	@agent
@@ -98,7 +107,8 @@ class MarketResearchTeam():
 		return Agent(
 			config=self.agents_config['strategic_planner'],
 			tools=[SerperDevTool(),],
-			verbose=True
+			verbose=True,
+			allow_delegation=False
 		)
 	
 	@task
@@ -198,6 +208,7 @@ class MarketResearchTeam():
 			tasks=self.tasks,
 			rocess=Process.sequential,
 			verbose=True,
+			cache=False
 		)
 
     

@@ -70,7 +70,7 @@ CORS_ORIGIN_WHITELIST=[
     "http://13.61.220.76",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app",
     "https://13.61.220.76",
-    " https://smartteams.nypus.in"
+    "https://smartteams.nypus.in"
 ]
 CORS_ORIGIN_REGEX_WHITELIST=[ "http://localhost:5173",
      "http://localhost:9090",  
@@ -78,7 +78,7 @@ CORS_ORIGIN_REGEX_WHITELIST=[ "http://localhost:5173",
     "http://13.61.220.76",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app",
      "https://13.61.220.76",
-     " https://smartteams.nypus.in"
+     "https://smartteams.nypus.in"
 
 ]
 
@@ -89,10 +89,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://13.61.220.76",
     "https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app",
      "https://13.61.220.76",
-    " https://smartteams.nypus.in"
+    "https://smartteams.nypus.in"
 ]
 
-CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/"," https://smartteams.nypus.in", "https://13.61.220.76","http://13.61.220.76","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
+CSRF_TRUSTED_ORIGINS=["https://66f56041a5cf651ae57ac743--cute-mandazi-3c71ba.netlify.app/","https://smartteams.nypus.in", "https://13.61.220.76","http://13.61.220.76","https://34.230.50.181","https://kimsat.netlify.app", "http://localhost:3000","http://0.0.0.0:9090","http://localhost:5173","https://67b05374f02aa14ef04da956--meek-yeot-a779e9.netlify.app"]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_METHODS = [
@@ -166,7 +166,7 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-CELERY_TIMEZONE = "Asia/Kolkata"  # Ensures the scheduler follows IST
+
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis as the broker
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Redis as the result backend
 CELERY_RESULT_BACKEND = 'django-db'
