@@ -46,7 +46,11 @@ def run(message_id,message):
     chat_message = get_object_or_404(ChatMessage, id=message_id)
     research, created = MarketResearch.objects.update_or_create(
         session=chat_message,  
-        topic=message.get("topic")
+        topic=message.get("topic"),
+        # geographic_focus=message.get("geographic_focus"),
+        # review_source=message.get("review_source"),
+        # target_audience=message.get("target_audience"),
+        # timeframe=message.get("timeframe")
        
     )
     
@@ -93,18 +97,21 @@ def run(message_id,message):
     crew = MarketResearchTeam().crew()
     crew.tasks = selected_tasks  # Assign only pending tasks
 
-    geographic_focus = "North America and Europe"
-    review_source = "Google Reviews, Trustpilot, and Social Media Mentions"
-    target_audience = "Tech Enthusiasts and Business Professionals"
-    timeframe = "Last 12 months"
-
-    topic = (f"Conduct a detailed market and lead analysis focusing on businesses in {geographic_focus}. "
-             f"Additionally, review customer feedback from {review_source} to understand {target_audience} "
-             f"preferences over the {timeframe}.")
+    # geographic_focus=message.get("geographic_focus")
+    # review_source=message.get("review_source")
+    # target_audience=message.get("target_audience")
+    # timeframe=message.get("timeframe")
+    # geographic_focus = "North America and Europe"
+    # review_source = "Google Reviews, Trustpilot, and Social Media Mentions"
+    # target_audience = "Tech Enthusiasts and Business Professionals"
+    # timeframe = "Last 12 months"
+    # topic = (f"Conduct a detailed market and lead analysis focusing on businesses in {geographic_focus}. "
+    #          f"Additionally, review customer feedback from {review_source} to understand {target_audience} "
+    #          f"preferences over the {timeframe}.")
 
     # Define inputs to be used by CrewAI tasks
     inputs = {
-        "topic": topic,
+        "topic": message.get("topic"),
     }
     result = crew.kickoff(inputs=inputs)
 

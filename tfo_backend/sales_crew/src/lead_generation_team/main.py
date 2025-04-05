@@ -50,10 +50,10 @@ def run(message_id=1,message=2):
         session=chat_message,  
         topic=message.get("target_industry")
     )
-    target_industry = "Smartphone and Consumer Electronics"
-    company_size_range = "Mid-sized (50-500 employees)"
-    geographic_focus = "North America and Europe"
-    lead_source_channels = "LinkedIn, Crunchbase, and industry reports"
+    target_industry = message.get("target_industry")
+    company_size_range = message.get("company_size_range")
+    geographic_focus = message.get("geographic_focus")
+    lead_source_channels = message.get("lead_source_channels")
 
     topic = (f"Conduct a detailed market and lead analysis for the {target_industry} sector, "
              f"focusing on {company_size_range} businesses in {geographic_focus}. "
@@ -117,7 +117,7 @@ def run(message_id=1,message=2):
                         "message": message_data_string,
                         "task_name": "RESULT",
                         "user": "AI",
-                        "retry":f"{status}"
+                        "retry":"True"
                         },task_name="RESULT")
 
     return str(result)
