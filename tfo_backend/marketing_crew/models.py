@@ -6,9 +6,9 @@ import json
 class MarketResearch(models.Model):
     session = models.ForeignKey(ChatMessage, on_delete=models.CASCADE, related_name="market_research_sessions")
     topic = models.CharField(max_length=50)
-    geographic_focus = models.CharField(max_length=50, blank=True, null=True)
-    target_audience = models.CharField(max_length=50, blank=True, null=True)
-    timeframe = models.CharField(max_length=50,blank=True, null=True)
+    # geographic_focus = models.CharField(max_length=50, blank=True, null=True)
+    # target_audience = models.CharField(max_length=50, blank=True, null=True)
+    # timeframe = models.CharField(max_length=50,blank=True, null=True)
     complete = models.BooleanField(default=False)
 
     def __str__(self):

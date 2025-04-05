@@ -46,7 +46,7 @@ def run(message_id,message):
     chat_message = get_object_or_404(ChatMessage, id=message_id)
     research, created = MarketResearch.objects.update_or_create(
         session=chat_message,  
-        topic=message.get("topic"),
+        topic=message.get("topic")
         # geographic_focus=message.get("geographic_focus"),
         # review_source=message.get("review_source"),
         # target_audience=message.get("target_audience"),
@@ -111,7 +111,7 @@ def run(message_id,message):
 
     # Define inputs to be used by CrewAI tasks
     inputs = {
-        "topic": message.get("topic"),
+        "topic": message.get("topic")
     }
     result = crew.kickoff(inputs=inputs)
 
