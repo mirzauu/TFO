@@ -5,6 +5,7 @@ from sales_crew.src.lead_generation_team.tools.task_status import TaskStatusUpda
 from dotenv import load_dotenv
 import sales_crew.src.lead_generation_team.main as main
 import sales_crew.src.lead_generation_team.schema as lead_schema
+
 load_dotenv()
 
 

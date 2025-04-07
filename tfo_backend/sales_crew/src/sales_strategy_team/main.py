@@ -3,7 +3,7 @@ import sys
 import warnings
 from django.shortcuts import get_object_or_404
 from sales_crew.src.sales_strategy_team.crew import SalesStrategyTeam
-
+from crewai import Agent, Crew, Process, Task
 from sales_crew.models import SalesStrategy,SalesStrategyTask
 from organizations.models import ChatMessage
 import json
@@ -36,9 +36,8 @@ def task_callback(task_name, result,formate):
     except Exception as e:
         print(f"Error updating task '{task_name}': {e}")
 
-
-def run(message_id,message):
-    print("reached to sales")
+def run(message_id, message):
+    print("Reached to sales")
     global lead_id
 
     chat_message = get_object_or_404(ChatMessage, id=message_id)
@@ -49,11 +48,10 @@ def run(message_id,message):
         timeframe=message.get("timeframe"),
         data_source=message.get("data_source")
     )
-    print("reached to sales2",message)
-    lead_id=lead
+    lead_id = lead
+
     task_name_mapping = {
         "market_research_analyst_task": "Market Research Analyst",
-  
         "SWOT_analysis_evaluator_task": "SWOT Analysis Evaluator",
         "competitor_analyst_task": "Competitor Analyst",
         "pricing_strategist_task": "Pricing Strategist",
@@ -62,70 +60,71 @@ def run(message_id,message):
 
     for task_name, readable_name in task_name_mapping.items():
         SalesStrategyTask.objects.get_or_create(
-            sales_strategy=lead, 
-            task_name=readable_name, 
-       
+            sales_strategy=lead,
+            task_name=readable_name,
         )
-    print("reached to sales4")
+
     pending_tasks = SalesStrategyTask.objects.filter(sales_strategy=lead, status="PENDING").order_by("id")
-    print("reached to sales")
-    # Create a list of CrewAI tasks that match the pending ones
-    try:
-        crew_instance = SalesStrategyTeam()
-        print("crewins")
-    except Exception as e:
-        print("crewins none")
-        crew_instance = None  # or handle it differently if needed
-        print(f"Error creating SalesStrategyTeam instance: {e}")
 
-    selected_tasks = []
-    print("SALES ",selected_tasks)
-    for crew_task_name, db_task_name in task_name_mapping.items():
-        if pending_tasks.filter(task_name=db_task_name).exists():
-            print(crew_task_name)            
-            task_func = getattr(crew_instance, crew_task_name, None)
-            if task_func:
-                selected_tasks.append(task_func())
-    print("SALES2 ",selected_tasks)
-
-    if not selected_tasks:
-        return "No pending tasks to execute."  
-    
-    print("reached to sales6")
-    crew = SalesStrategyTeam().crew()
-    crew.tasks = selected_tasks   
-
-   
+    # Compose the topic
     industry_sector = message.get("industry_sector")
     target_market = message.get("target_market")
     timeframe = message.get("timeframe")
     data_source = message.get("data_source")
 
-    # Format the topic as a clear sentence
-    topic = f"Analyze the {industry_sector} with a focus on {target_market} over {timeframe}, using data from {data_source}."
-    
-    inputs = {
-        'topic': topic
-    }
-    result = crew.kickoff(inputs=inputs)
+    topic = (
+        f"Analyze the {industry_sector} with a focus on {target_market} over {timeframe}, "
+        f"using data from {data_source}."
+    )
 
-    print(result)
+    inputs = {"topic": topic}
+    message_result = {}
 
-    tasks = SalesStrategyTask.objects.filter(sales_strategy=lead).order_by("id")
-    task_status_mapping = {}
-    for task in tasks:
-        task_status_mapping[task.task_name] = task.status 
+    # Initialize the crew team and agents once
+    try:
+        crew_instance = SalesStrategyTeam()
+        agent_list = [
+            crew_instance.market_analyst(),
+            crew_instance.swot_analyst(),
+            crew_instance.competitor_analyst(),
+            crew_instance.pricing_strategist(),
+            crew_instance.sales_pitch_specialist(),
+        ]
+    except Exception as e:
+        print(f"Error creating SalesStrategyTeam instance or agents: {e}")
+        return f"Error: {str(e)}"
 
-    message_data_string = json.dumps(task_status_mapping)
-    
-    status = tasks[0].sales_strategy.complete if tasks else False
-    
+    # Run each task individually
+    for crew_task_name, db_task_name in task_name_mapping.items():
+        if pending_tasks.filter(task_name=db_task_name).exists():
+            task_func = getattr(crew_instance, crew_task_name, None)
+            if not task_func:
+                continue
+
+            single_task = task_func()
+
+            single_task_crew = Crew(
+                agents=agent_list,
+                tasks=[single_task],
+                process=Process.sequential,
+                verbose=True,
+            )
+
+            try:
+                result = single_task_crew.kickoff(inputs=inputs)
+                message_result[db_task_name] = "COMPLETED"
+            except Exception as e:
+                message_result[db_task_name] = f"FAILED: {str(e)}"
+
+    # Save result message
+    message_data_string = json.dumps(message_result)
+
     lead.session.save_message_to_mongo({
-                        "Type": "box",
-                        "message": message_data_string,
-                        "task_name": "RESULT",
-                        "user": "AI",
-                        "retry":f"{status}"
-                        },task_name="RESULT")
+        "Type": "box",
+        "message": message_data_string,
+        "task_name": "RESULT",
+        "user": "AI",
+        "retry": "True"
+    }, task_name="Task Status")
 
-    return str(result)
+    return str(message_result)

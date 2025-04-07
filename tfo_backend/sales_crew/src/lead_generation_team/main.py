@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import warnings
-
+from crewai import Agent, Crew, Process, Task
 from organizations.models import ChatMessage
 import json
 from sales_crew.models import LeadGeneration,LeadGenerationTask
@@ -80,47 +80,52 @@ def run(message_id=1,message=2):
         )
 
     pending_tasks = LeadGenerationTask.objects.filter(lead_generation=lead, status="PENDING").order_by("id")
-
+    inputs = {"topic": topic}
     # Create a list of CrewAI tasks that match the pending ones
     crew_instance = LeadGenerationTeam()
-    selected_tasks = []
+    message_result={}
+    # Manually initialize all agents once
+    agent_list = [
+        crew_instance.lead_identifier(),
+        crew_instance.research_analyst(),
+        crew_instance.social_media_extractor(),
+        crew_instance.competitor_analyst(),
+    ]
 
+    # Run each task separately
     for crew_task_name, db_task_name in task_name_mapping.items():
         if pending_tasks.filter(task_name=db_task_name).exists():
-            print(crew_task_name)            
             task_func = getattr(crew_instance, crew_task_name, None)
-            if task_func:
-                selected_tasks.append(task_func())
+            if not task_func:
+                continue
 
-    if not selected_tasks:
-        return "No pending tasks to execute."    
+            single_task = task_func()
 
-    crew = LeadGenerationTeam().crew()
-    crew.tasks = selected_tasks 
+            # Create a mini crew with only one task
+            single_task_crew = Crew(
+                agents=agent_list,
+                tasks=[single_task],
+                process=Process.sequential,
+                verbose=True,
+            )
 
-    inputs = {
-        "topic": topic,
-    }
-    result = crew.kickoff(inputs=inputs)
+            try:
+                result = single_task_crew.kickoff(inputs=inputs)
+                message_result[db_task_name] = "COMPLETED"
+            except Exception as e:
+                message_result[db_task_name] = f"FAILED: {str(e)}"
 
-    tasks = LeadGenerationTask.objects.filter(lead_generation=lead).order_by("id")
-    task_status_mapping = {}
-    for task in tasks:
-        task_status_mapping[task.task_name] = task.status 
+    message_data_string = json.dumps(message_result)
 
-    message_data_string = json.dumps(task_status_mapping)
-    
-    status = lead.complete
-    
     lead.session.save_message_to_mongo({
-                        "Type": "box",
-                        "message": message_data_string,
-                        "task_name": "RESULT",
-                        "user": "AI",
-                        "retry":"True"
-                        },task_name="RESULT")
+        "Type": "box",
+        "message": message_data_string,
+        "task_name": "RESULT",
+        "user": "AI",
+        "retry": "True"
+    }, task_name="Task Status")
 
-    return str(result)
+    return str(message_result)
 
 
 def retry(message_id):

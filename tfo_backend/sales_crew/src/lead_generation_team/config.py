@@ -34,7 +34,7 @@ class AgentType(Enum):
 
 class ClassificationResponse(BaseModel):
     classification: ClassificationResult
-    required_agent: Optional[AgentType] = None
+    required_agent: Optional[AgentType] 
     formatted_prompt: str 
 
 class QueryClassifier:
