@@ -46,7 +46,7 @@ class QueryClassifier:
         domain = "content_creation"
         if domain not in CLASSIFIER_PROMPTS:
             raise ValueError(f"Unsupported domain: {domain}")
-
+        
         # Load the prompt (Fixed KeyError)
         prompt_template = CLASSIFIER_PROMPTS[domain]
 
@@ -54,32 +54,12 @@ class QueryClassifier:
         if not all(isinstance(msg, dict) and "role" in msg and "content" in msg for msg in history):
             raise ValueError("Invalid history format. Expected a list of dictionaries with 'role' and 'content' keys.")
 
-        # Extract query and history from the last user message
-        last_message = history[-1]["content"]
-        match = re.search(r"Query:\s*(.*?)\nHistory:\n(.*)", last_message, re.DOTALL)
-
-        if match:
-            query = match.group(1).strip()
-            raw_history = match.group(2).strip()
-
-            # Extract history maintaining separate role-content pairs
-            extracted_history = []
-            for line in raw_history.split("\n"):
-                if line.startswith("User: "):
-                    extracted_history.append({"role": "user", "content": line[len("User: "):]})
-                elif line.startswith("Assistant: "):
-                    extracted_history.append({"role": "assistant", "content": line[len("Assistant: "):]})
-
-        else:
-            extracted_history = history
-
-        # Prepare structured message history
-        messages = [{"role": "system", "content": prompt_template}] + extracted_history
-
-        # Append the latest user query as a separate message
-        messages.append({"role": "user", "content": query})
-
-        print("message", messages)
+        # Prepare inputs (Fixed string formatting)
+        formatted_history = "\n".join(f"{msg['role'].capitalize()}: {msg['content']}" for msg in history[-5:])
+        messages = [
+            {"role": "system", "content": prompt_template},
+            {"role": "user", "content": f"Query: {query}\nHistory:\n{formatted_history}"},
+        ]
 
         # Call LLM function
         return await call_llm_with_structured_output(messages, ClassificationResponse)

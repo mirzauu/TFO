@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import warnings
+from crewai import Agent, Crew, Process, Task
 
 from datetime import datetime
 from marketing_crew.src.seo_sem_crew.crew import SeoSemCrew
@@ -37,26 +38,21 @@ def task_callback(task_name, result,formate):
         print(f"Error updating task '{task_name}': {e}")
 
 
-
-
-def run(message_id,message):
-
+def run(message_id, message):
     global seo_id
-    
+
     print(message)
     chat_message = get_object_or_404(ChatMessage, id=message_id)
     seo, created = SEOResearch.objects.update_or_create(
-        session=chat_message,  
+        session=chat_message,
         website_name=message.get("website_name"),
         competitors=message.get("competitors"),
         target_audience=message.get("target_audience"),
         ad_budget=message.get("ad_budget"),
         primary_goals=message.get("primary_goals")
-       
     )
-    
-    seo_id=seo
 
+    seo_id = seo
 
     task_name_mapping = {
         "keyword_research_task": "Keyword Research",
@@ -72,67 +68,77 @@ def run(message_id,message):
         "internal_linking_task": "Internal Linking Strategy",
         "content_strategy_task": "Content Strategy",
     }
-    for task_name, readable_name in task_name_mapping.items():
-        SEOResearchTask.objects.get_or_create(
-            research=seo, 
-            task_name=readable_name, 
-       
-        )
-  
-    pending_tasks = SEOResearchTask.objects.filter(research=seo, status="PENDING").order_by("id")
 
-    # Create a list of CrewAI tasks that match the pending ones
-    crew_instance = SeoSemCrew()
-    selected_tasks = []
+    for _, readable_name in task_name_mapping.items():
+        SEOResearchTask.objects.get_or_create(research=seo, task_name=readable_name)
+
+    pending_tasks = SEOResearchTask.objects.filter(research=seo, status="PENDING").order_by("id")
+    if not pending_tasks.exists():
+        return "No pending tasks to execute."
+
+    try:
+        crew_instance = SeoSemCrew()
+        agent_list = [
+            crew_instance.keyword_researcher(),
+            crew_instance.competitor_analyst(),
+            crew_instance.content_optimizer(),
+            crew_instance.backlink_analyst(),
+            crew_instance.analytics_specialist(),
+            crew_instance.seo_reporter(),
+            crew_instance.meta_description_creator(),
+            crew_instance.ad_copywriter(),
+            crew_instance.sem_campaign_manager(),
+            crew_instance.seo_auditor(),
+            crew_instance.internal_link_strategist(),
+            crew_instance.content_strategist(),
+        ]
+    except Exception as e:
+        return f"Error initializing SEO/SEM agents: {str(e)}"
+
+    # Compose detailed topic string
+    topic = (
+        f"Develop and optimize SEO and SEM strategies for {message.get('website_name')}, "
+        f"targeting {message.get('target_audience')}. Conduct competitive analysis against "
+        f"{message.get('competitors')} and create ad campaigns within an {message.get('ad_budget')}."
+    )
+
+    inputs = {
+        "topic": topic
+    }
+
+    message_result = {}
 
     for crew_task_name, db_task_name in task_name_mapping.items():
         if pending_tasks.filter(task_name=db_task_name).exists():
-            print(crew_task_name)            
             task_func = getattr(crew_instance, crew_task_name, None)
-            if task_func:
-                selected_tasks.append(task_func())
+            if not task_func:
+                continue
 
-    if not selected_tasks:
-        return "No pending tasks to execute."
+            single_task = task_func()
+            single_task_crew = Crew(
+                agents=agent_list,
+                tasks=[single_task],
+                process=Process.sequential,
+                verbose=True
+            )
 
-    crew = SeoSemCrew().crew()
-    crew.tasks = selected_tasks 
-   
-    website_name =  f"{message.get("website_name")}"
-    competitors = f"{message.get("competitors")}"
-    target_audience =  f"{message.get("target_audience")}"
-    ad_budget =   f"{message.get("ad_budget")}"
+            try:
+                result = single_task_crew.kickoff(inputs=inputs)
+                message_result[db_task_name] = "COMPLETED"
+            except Exception as e:
+                message_result[db_task_name] = f"FAILED: {str(e)}"
 
-    # Format the topic variable as a detailed sentence
-    topic = (f"Develop and optimize SEO and SEM strategies for {website_name}, "
-             f"targeting {target_audience}. Conduct competitive analysis against "
-             f"{competitors} and create ad campaigns within an {ad_budget}.")
+    message_data_string = json.dumps(message_result)
+    status = SEOResearchTask.objects.filter(research=seo).first().research.complete
 
-    # Define inputs for the CrewAI task
-    inputs = {
-        'topic': topic,
-    }
-
-    try:
-        result = crew.kickoff(inputs=inputs)
-    except Exception as e:
-        raise Exception(f"An error occurred while running the crew: {e}")
-    
-
-    tasks = SEOResearchTask.objects.filter(research=seo).order_by("id")
-    task_status_mapping = {}
-    for task in tasks:
-        task_status_mapping[task.task_name] = task.status 
-
-    message_data_string = json.dumps(task_status_mapping)
-    status = tasks[0].research.complete if tasks else False
     seo.session.save_message_to_mongo({
-                        "Type": "box",
-                        "message": message_data_string,
-                        "task_name": "TASK STATUS",
-                        "user": "AI",
-                        "retry":f"{status}"
-                        },task_name="TASK STATUS")
+        "Type": "box",
+        "message": message_data_string,
+        "task_name": "TASK STATUS",
+        "user": "AI",
+        "retry": f"{status}"
+    }, task_name="TASK STATUS")
 
-    return str(result)
+    return str(message_result)
+
 

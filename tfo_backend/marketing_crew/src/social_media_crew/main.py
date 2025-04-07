@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import warnings
-
+from crewai import Agent, Crew, Process, Task
 from datetime import datetime
 
 from marketing_crew.src.social_media_crew.crew import SocialMediaCrew
@@ -40,23 +40,22 @@ def task_callback(task_name, result,formate):
 
     except Exception as e:
         print(f"Error updating task '{task_name}': {e}")
-
-def run(message_id,message):
+def run(message_id, message):
     global social_id
-    
+
     print(message)
     chat_message = get_object_or_404(ChatMessage, id=message_id)
     social, created = SocialMediaResearch.objects.update_or_create(
-        session=chat_message,  
+        session=chat_message,
         competitors=message.get("competitors"),
         campaign_theme=message.get("campaign_theme"),
         target_audience=message.get("target_audience"),
         platform=message.get("platform"),
         goal=message.get("goal")
-       
     )
-    
-    social_id=social
+
+    social_id = social
+
     task_name_mapping = {
         "competitor_analysis_task": "Competitor Analysis",
         "content_planner_task": "Content Planning",
@@ -70,64 +69,73 @@ def run(message_id,message):
         "scriptwriting_task": "Scriptwriting for Social Media",
     }
 
-    for task_name, readable_name in task_name_mapping.items():
-        SocialMediaResearchTask.objects.get_or_create(
-            research=social, 
-            task_name=readable_name, 
-       
-        )
-  
-    pending_tasks = SocialMediaResearchTask.objects.filter(research=social, status="PENDING").order_by("id")
+    for _, readable_name in task_name_mapping.items():
+        SocialMediaResearchTask.objects.get_or_create(research=social, task_name=readable_name)
 
-    # Create a list of CrewAI tasks that match the pending ones
-    crew_instance = SocialMediaCrew()
-    selected_tasks = []
+    pending_tasks = SocialMediaResearchTask.objects.filter(research=social, status="PENDING").order_by("id")
+    if not pending_tasks.exists():
+        return "No pending tasks to execute."
+
+    try:
+        crew_instance = SocialMediaCrew()
+        agent_list = [
+            crew_instance.competitor_analyst(),
+            crew_instance.content_planner(),
+            crew_instance.brand_monitor(),
+            crew_instance.influencer_scout(),
+            crew_instance.customer_engagement_expert(),
+            crew_instance.metrics_analyst(),
+            crew_instance.hashtag_strategist(),
+            crew_instance.campaign_designer(),
+            crew_instance.caption_creator(),
+            crew_instance.script_writer(),
+        ]
+    except Exception as e:
+        return f"Error initializing social media agents: {str(e)}"
+
+    topic = (
+        f"Develop a social media campaign for {message.get('campaign_theme')}, targeting "
+        f"{message.get('target_audience')} on {message.get('platform')}. "
+        f"Analyze competitor strategies from {message.get('competitors')} and implement content "
+        f"ideas to achieve the goal: {message.get('goal')}."
+    )
+
+    inputs = {
+        "topic": topic
+    }
+
+    message_result = {}
 
     for crew_task_name, db_task_name in task_name_mapping.items():
         if pending_tasks.filter(task_name=db_task_name).exists():
-            print(crew_task_name)            
             task_func = getattr(crew_instance, crew_task_name, None)
-            if task_func:
-                selected_tasks.append(task_func())
+            if not task_func:
+                continue
 
-    if not selected_tasks:
-        return "No pending tasks to execute."
-    
-    crew = SocialMediaCrew().crew()
-    crew.tasks = selected_tasks 
+            single_task = task_func()
+            single_task_crew = Crew(
+                agents=agent_list,
+                tasks=[single_task],
+                process=Process.sequential,
+                verbose=True
+            )
 
-    competitors =message.get("competitors")
-    campaign_theme = message.get("campaign_theme")
-    target_audience =message.get("target_audience")
-    platform = message.get("platform")
-    goal = message.get("goal")
+            try:
+                result = single_task_crew.kickoff(inputs=inputs)
+                message_result[db_task_name] = "COMPLETED"
+            except Exception as e:
+                message_result[db_task_name] = f"FAILED: {str(e)}"
 
-    topic = (f"Develop a social media campaign for {campaign_theme}, targeting {target_audience} on {platform}. "
-             f"Analyze competitor strategies from {competitors} and implement content ideas to achieve the goal: {goal}.")
-    
-    inputs = {
-        'topic': topic
-    }
+    message_data_string = json.dumps(message_result)
+    status = SocialMediaResearchTask.objects.filter(research=social).first().research.complete
 
-    try:
-        result = crew.kickoff(inputs=inputs)
-    except Exception as e:
-        raise Exception(f"An error occurred while running the crew: {e}")
-    
-    tasks = SocialMediaResearchTask.objects.filter(research=social).order_by("id")
-    task_status_mapping = {}
-    for task in tasks:
-        task_status_mapping[task.task_name] = task.status 
-
-    message_data_string = json.dumps(task_status_mapping)
-    status = tasks[0].research.complete if tasks else False
     social.session.save_message_to_mongo({
-                        "Type": "box",
-                        "message": message_data_string,
-                        "task_name": "RESULT",
-                        "user": "AI",
-                        "retry":f"{status}"
-                        },task_name="RESULT")
+        "Type": "box",
+        "message": message_data_string,
+        "task_name": "RESULT",
+        "user": "AI",
+        "retry": f"{status}"
+    }, task_name="Task Result")
 
-    return str(result)
+    return str(message_result)
 
