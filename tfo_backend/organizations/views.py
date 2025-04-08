@@ -18,7 +18,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.signals import user_logged_out
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import AllowAny
-
+import json
 class OrganizationLoginView(APIView):
     """
     Login view for organization users.
@@ -432,6 +432,7 @@ class OrgSetupAPIView(APIView):
         }
         return Response(data, status=status.HTTP_200_OK)
 
+    
     def put(self, request):
         """
         Update IT Setup and Policy Setup for an organization.
@@ -444,11 +445,24 @@ class OrgSetupAPIView(APIView):
         if user.role.name == "organization_staff":
             return Response({"error": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
 
+        # Handle `form-data` with JSON in `data` and file in `file`
+        try:
+            payload = json.loads(request.data.get("data", "{}"))
+        except json.JSONDecodeError:
+            return Response({"error": "Invalid JSON format in `data`"}, status=status.HTTP_400_BAD_REQUEST)
+
+        it_data = payload.get("it_setup", {})
+        policy_data = payload.get("policy_setup", {})
+
+        # Add the uploaded file manually (if any)
+        if "file" in request.FILES:
+            policy_data["document"] = request.FILES["file"]
+
         it_setup = ITSetup.objects.filter(organization=organization).first()
         policy_setup = PolicySetup.objects.filter(organization=organization).first()
 
-        it_serializer = ITSetupSerializer(it_setup, data=request.data.get("it_setup", {}), partial=True)
-        policy_serializer = PolicySetupSerializer(policy_setup, data=request.data.get("policy_setup", {}), partial=True)
+        it_serializer = ITSetupSerializer(it_setup, data=it_data, partial=True)
+        policy_serializer = PolicySetupSerializer(policy_setup, data=policy_data, partial=True)
 
         if it_serializer.is_valid() and policy_serializer.is_valid():
             it_serializer.save()
