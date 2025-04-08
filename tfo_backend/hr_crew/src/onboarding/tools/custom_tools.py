@@ -3,7 +3,9 @@ from pydantic import BaseModel, Field
 from typing import Literal
 from django.shortcuts import get_object_or_404
 from crewai.tools import BaseTool
-
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 from typing import Type
 from hr_crew.models import Onboarding, EmployeeOnboardingTask,EmployeeDocuments
 import smtplib
@@ -326,6 +328,61 @@ def get_policy_setup_details(chat_message_id):
         return {"error": "Policy setup details not found for the given chat message ID"}
     except Exception as e:
         return {"error": str(e)}
+
+class SendPolicyEmailTool(BaseTool):
+    name: str = "send_policy_email_tool"
+    description: str = "Sends an email to an employee with policy details attached."
+    args_schema: Type[BaseModel] = EmailSchema  # assuming you already have this defined elsewhere
+
+    def _run(self, employee_name: str, recipient_email: str, subject: str, content: str, chat_message_id: int) -> str:
+        try:
+            smtp_details = get_smtp_details(chat_message_id)
+            policy_details = get_policy_setup_details(chat_message_id)
+
+            if "error" in smtp_details:
+                return f"❌ Error: {smtp_details['error']}"
+            if "error" in policy_details:
+                return f"❌ Error: {policy_details['error']}"
+
+            smtp_host = smtp_details["smtp_host"]
+            smtp_port = smtp_details["smtp_port"]
+            sender_email = smtp_details["sender_email"]
+            password = smtp_details["password"]
+
+            if not smtp_host or not smtp_port or not sender_email or not password:
+                return "❌ Error: Incomplete SMTP configuration."
+
+            # Prepare email with policy details
+            msg = MIMEMultipart()
+            msg['From'] = sender_email
+            msg['To'] = recipient_email
+            msg['Subject'] = subject
+
+            email_body = f"{content}\n\nPolicy Instructions:\n{policy_details['policy_name']}"
+            msg.attach(MIMEText(email_body, 'plain'))
+
+            # ✅ Attach policy document if exists
+            policy_file = policy_details.get("policy_attachment")
+            if policy_file:
+                try:
+                    file_path = policy_file.path  # Only works with local storage
+                    with open(file_path, 'rb') as f:
+                        part = MIMEApplication(f.read(), Name=policy_file.name)
+                        part['Content-Disposition'] = f'attachment; filename="{policy_file.name}"'
+                        msg.attach(part)
+                except Exception as file_error:
+                    return f"❌ Error attaching policy document: {str(file_error)}"
+
+            # Send email
+            with smtplib.SMTP(smtp_host, smtp_port) as server:
+                server.starttls()
+                server.login(sender_email, password)
+                server.send_message(msg)
+
+            return f"✅ Policy details email sent to {employee_name} at {recipient_email}"
+
+        except Exception as e:
+            return f"❌ Error sending policy email: {str(e)}"
 
 
 class SendSetupEmailTool(BaseTool):
