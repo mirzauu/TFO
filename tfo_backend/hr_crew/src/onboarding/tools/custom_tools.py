@@ -317,8 +317,8 @@ def get_policy_setup_details(chat_message_id):
         policy_setup = PolicySetup.objects.get(organization=organization)
         
         return {
-            "policy_name": policy_setup.name,
-            "policy_description": policy_setup.description,
+            "policy_name": policy_setup.instructions,
+            "policy_attachment": policy_setup.document,
             "created_at": policy_setup.created_at,
             "updated_at": policy_setup.updated_at,
         }
@@ -326,48 +326,6 @@ def get_policy_setup_details(chat_message_id):
         return {"error": "Policy setup details not found for the given chat message ID"}
     except Exception as e:
         return {"error": str(e)}
-
-class SendPolicyEmailTool(BaseTool):
-    name: str = "send_policy_email_tool"
-    description: str = "Sends an email to an employee with policy details attached."
-    args_schema: Type[BaseModel] = EmailSchema
-
-    def _run(self, employee_name: str, recipient_email: str, subject: str, content: str, chat_message_id: int) -> str:
-        try:
-            smtp_details = get_smtp_details(chat_message_id)
-            policy_details = get_policy_setup_details(chat_message_id)
-
-            if "error" in smtp_details:
-                return f"❌ Error: {smtp_details['error']}"
-            if "error" in policy_details:
-                return f"❌ Error: {policy_details['error']}"
-
-            smtp_host = smtp_details["smtp_host"]
-            smtp_port = smtp_details["smtp_port"]
-            sender_email = smtp_details["sender_email"]
-            password = smtp_details["password"]
-
-            if not smtp_host or not smtp_port or not sender_email or not password:
-                return "❌ Error: Incomplete SMTP configuration."
-
-            # Prepare email with policy details
-            msg = MIMEMultipart()
-            msg['From'] = sender_email
-            msg['To'] = recipient_email
-            msg['Subject'] = subject
-
-            email_body = f"{content}\n\nPolicy Details:\n{policy_details}"
-            msg.attach(MIMEText(email_body, 'plain'))
-
-            with smtplib.SMTP(smtp_host, smtp_port) as server:
-                server.starttls()
-                server.login(sender_email, password)
-                server.send_message(msg)
-
-            return f"✅ Policy details email sent to {employee_name} at {recipient_email}"
-
-        except Exception as e:
-            return f"❌ Error sending policy email: {str(e)}"
 
 
 class SendSetupEmailTool(BaseTool):
