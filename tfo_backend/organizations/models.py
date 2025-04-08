@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 from pymongo import DESCENDING
 from pymongo import ReturnDocument
 from django.utils.timezone import now
-
+from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 # MongoDB setup
@@ -233,7 +233,7 @@ class ChatMessage(models.Model):
                 "chat_message_id": str(self.id),
                 "session_id": str(self.session.id),
                 "message_number": message_number,
-                "timestamp": datetime.now(),
+                "timestamp": timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
                 **message_data,
             }
             chat_collection.insert_one(message_document)

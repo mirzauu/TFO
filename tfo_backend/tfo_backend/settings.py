@@ -30,7 +30,8 @@ load_dotenv(dotenv_path)
 SECRET_KEY = "django-insecure--nr#q(=+dy7i^cc6r-tt1_k&ah@#94c=zp6&6x77)#8t^42!v@"
 
 
-
+TIME_ZONE = 'Asia/Kolkata'
+USE_TZ = True
 
 DEBUG = True
 
